@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca Imperial | Gestión</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* === CONFIGURACIÓN DE COLORES === */
+        :root {
+            --primary-purple: #4a148c;   /* El morado oscuro principal */
+            --secondary-purple: #7b1fa2; /* El morado más brillante */
+            --light-accent: #e1bee7;     /* Color lila clarito para detalles */
+            --dark-bg: #12002b;          /* Fondo casi negro para el encabezado */
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f6f9; /* Fondo gris muy suave para la página */
+        }
+
+        /* === ESTILOS DEL MENÚ SUPERIOR (NAVBAR) === */
+        .navbar-custom {
+            background: linear-gradient(90deg, var(--primary-purple), var(--secondary-purple));
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .nav-link:hover {
+            color: #fff !important; /* Texto blanco al pasar el mouse */
+            text-shadow: 0 0 10px rgba(255,255,255,0.5); /* Brillo suave */
+        }
+
+        /* === ESTILOS DEL ENCABEZADO GIGANTE (HERO) === */
+        .hero-section {
+            background: var(--dark-bg);
+            color: white;
+            padding: 80px 0;
+            border-bottom-right-radius: 50px; /* Borde redondeado abajo derecha */
+            border-bottom-left-radius: 50px;  /* Borde redondeado abajo izquierda */
+            margin-bottom: 50px;
+        }
+
+        /* === ESTILOS DE LAS TARJETAS (CARDS) === */
+        .dashboard-card {
+            border: none;
+            border-radius: 15px;
+            background: white;
+            transition: all 0.4s ease; /* Suaviza la animación */
+            box-shadow: 0 10px 20px rgba(74, 20, 140, 0.1); /* Sombra morada suave */
+            height: 100%;
+        }
+
+        /* Animación: Al pasar el mouse, la tarjeta sube */
+        .dashboard-card:hover {
+            transform: translateY(-10px); 
+            box-shadow: 0 15px 30px rgba(74, 20, 140, 0.25);
+        }
+
+        /* Estilo de los iconos dentro de las tarjetas */
+        .dashboard-card .icon-box {
+            font-size: 2.5rem; /* Tamaño del icono */
+            color: var(--primary-purple);
+            margin-bottom: 15px;
+        }
+
+        /* Botón morado de las tarjetas */
+        .btn-custom {
+            background-color: var(--primary-purple);
+            color: white;
+            border-radius: 30px;
+            padding: 8px 25px;
+            border: none;
+        }
+        
+        .btn-custom:hover {
+            background-color: var(--secondary-purple);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-custom navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-book-reader me-2"></i> BIBLIO<span style="color: var(--light-accent);">TECH</span>
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link active" href="#">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Libros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Autores</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Préstamos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#">Multas</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero-section text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold">Gestión Bibliotecaria</h1>
+            <p class="lead mb-4" style="color: var(--light-accent);">Administra el conocimiento con elegancia.</p>
+            <button class="btn btn-light text-primary fw-bold rounded-pill px-5 py-2 shadow">
+                <i class="fas fa-plus me-2"></i>Nuevo Préstamo
+            </button>
+        </div>
+    </header>
+
+
+{% block contenido %}  
+{% endblock %}
+
+        </div>
+
+    </div> <footer class="text-center py-4 mt-5" style="background-color: var(--dark-bg); color: #888;">
+        <div class="container">
+            <p class="mb-0">&copy; 2025 Biblioteca Bacana.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

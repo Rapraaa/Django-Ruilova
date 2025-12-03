@@ -1,0 +1,46 @@
+{% extends "index.html" %} 
+{% block contenido %}
+    <div class="container">
+        <div class="row g-4">
+            
+            <div class="col-md-6 col-lg-3">
+                <div class="dashboard-card p-4 text-center">
+                    <div class="icon-box">
+                        <i class="fas fa-book"></i> </div>
+                    <h3>Libros</h3>
+                    <p class="text-muted small">Catálogo completo e inventario.</p>
+                    <a href="#" class="btn btn-custom mt-2">Ver Catálogo</a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="dashboard-card p-4 text-center">
+                    <div class="icon-box">
+                        <i class="fas fa-feather-alt"></i> </div>
+                    <h3>Autores</h3>
+                    <p class="text-muted small">Gestión de escritores y obras.</p>
+                    <a href="#" class="btn btn-custom mt-2">Gestionar</a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="dashboard-card p-4 text-center">
+                    <div class="icon-box">
+                        <i class="fas fa-handshake"></i> 
+                    </div>
+                    <h3>Préstamos</h3>
+                    <p class="text-muted small">Control de salidas y devoluciones.</p>
+                    <a href="#" class="btn btn-custom mt-2">Registrar</a>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="dashboard-card p-4 text-center">
+                    <div class="icon-box">
+                        <i class="fas fa-exclamation-circle"></i> </div>
+                    <h3>Multas</h3>
+                    <p class="text-muted small">Sanciones y pagos pendientes.</p>
+                    <a href="#" class="btn btn-custom mt-2">Revisar</a>
+                </div>
+            </div>
+{% endblock %}

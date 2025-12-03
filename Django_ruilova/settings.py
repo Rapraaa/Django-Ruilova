@@ -13,7 +13,10 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent #EXPLICAER QE ES BASE DIR
+
+TITLE = "UTE 2 semestre" #aca ponemos el titulo de la pagina web apra que este desarollo sirva para cualquier otro desarollo
+#ES DECIR, CUALQUIER PERSONA SOLO CAMBIA EL SETTINGS Y YA SE REFLEJA EN TODA LA PAGINA
 
 
 # Quick-start development settings - unsuitable for production
@@ -52,10 +55,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'Django_ruilova.urls'
 
-TEMPLATES = [
+TEMPLATES = [  #HAY QUE DECIR QUE DIRECTORIOS DEB E BUSCAR LAS TEMPLATES, COMO CREAMOS EL GESTION TEMPLATES HAY QUE AVISARLE, ACA HAY QUE USAR
+    #LA VARIABLE BASE DIR QUE ESA POR ARRIBA, EXPLICAR Y INVESTIGAR ESTO
+    #QUE HACE BASE DIR
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'BACKEND': 'django.template.backends.django.DjangoTemplates', #POR DEFECTO DONDE ESTA EL BACK ENDR
+        'DIRS': [BASE_DIR], #aca hay que poner BASE DIR PARA QUE VEA QUE LOS DIRS SON LOS QUE ESTAN EN BASE DIRS, EXPLICAR, PERO EL BASE DIR
+    #COMO SACA LA DIRECCION DEL DJANGO YA TIENE ACCESO A TODO
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

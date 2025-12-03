@@ -1,0 +1,9 @@
+{% extends "index.html" %}
+
+{% block contenido %} <h2> Autores </h2>
+<ul> {% for autor in autores%}
+    <li> {{autor.nombre}} {{autor.apellido}} {{autor.bibliografia}}
+    </li>
+{% endfor %}  <!-- asi se hace un for-->
+</ul>
+{% endblock %}
