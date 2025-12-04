@@ -60,23 +60,23 @@
         }
     </style>
 
-    <h2>Autores Registrados</h2>
+    <h2>Libros Registrados</h2>
 
     <div class="tabla-container">
         <table class="tabla-morada">
             <thead>
                 <tr>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Bibliografía</th>
+                    <th>Titulo</th>
+                    <th>Autor</th>
+                    <th>Disponible</th>
                 </tr>
             </thead>
             <tbody>
-                {% for autor in autores %}
+                {% for libro in libros %}
                 <tr>
-                    <td>{{ autor.nombre }}</td>
-                    <td>{{ autor.apellido }}</td>
-                    <td>{{ autor.bibliografia }}</td>
+                    <td>{{ libro.titulo }}</td>  <!-- explicar esto-->
+                    <td>{{ libro.autor }}</td>
+                    <td>{{ libro.disponible }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -9,7 +9,7 @@
                         <i class="fas fa-book"></i> </div>
                     <h3>Libros</h3>
                     <p class="text-muted small">Catálogo completo e inventario.</p>
-                    <a href="#" class="btn btn-custom mt-2">Ver Catálogo</a>
+                    <a href="{% url 'lista_libros'%}" class="btn btn-custom mt-2">Ver Catálogo</a>
                 </div>
             </div>
 
@@ -19,7 +19,7 @@
                         <i class="fas fa-feather-alt"></i> </div>
                     <h3>Autores</h3>
                     <p class="text-muted small">Gestión de escritores y obras.</p>
-                    <a href="#" class="btn btn-custom mt-2">Gestionar</a>
+                    <a href="{% url 'lista_autores' %}" class="btn btn-custom mt-2">Gestionar</a>
                 </div>
             </div>
 
@@ -30,7 +30,7 @@
                     </div>
                     <h3>Préstamos</h3>
                     <p class="text-muted small">Control de salidas y devoluciones.</p>
-                    <a href="#" class="btn btn-custom mt-2">Registrar</a>
+                    <a href="{% url 'lista_prestamos'%}" class="btn btn-custom mt-2">Registrar</a>
                 </div>
             </div>
 
@@ -40,7 +40,7 @@
                         <i class="fas fa-exclamation-circle"></i> </div>
                     <h3>Multas</h3>
                     <p class="text-muted small">Sanciones y pagos pendientes.</p>
-                    <a href="#" class="btn btn-custom mt-2">Revisar</a>
+                    <a href="{% url 'lista_multa' %}" class="btn btn-custom mt-2">Revisar</a>  <!-- solo hace falta cambiar aca el href no en la plantilla-->
                 </div>
             </div>
 {% endblock %}

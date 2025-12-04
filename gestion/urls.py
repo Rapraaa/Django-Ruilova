@@ -18,7 +18,7 @@ urlpatterns = [
     path("prestamos/", lista_prestamos, name="lista_prestamos"),
     path("prestamos/nuevo/", crear_prestamo, name="crear_prestamo"),
 
-    path("prestamos/<int:id>", detalle_prestamo, name="detalle_prestamo"),#el int id hace
+    path("prestamos/<int:id>", detalle_prestamo, name="detalle_prestamo"),#el int id hace #EXPLICARA ESTOOO
     #MULTAS
     path('multas/', lista_multa, name="lista_multa"),
     path('multas', crear_multa, name="crear_multa"), #hay que ponerle relacion con prestamos

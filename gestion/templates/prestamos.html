@@ -60,23 +60,27 @@
         }
     </style>
 
-    <h2>Autores Registrados</h2>
+    <h2>Prestamos Registrados</h2>
 
     <div class="tabla-container">
         <table class="tabla-morada">
             <thead>
                 <tr>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Bibliografía</th>
+                    <th>Libro</th>
+                    <th>Usuario</th>
+                    <th>Fecha del prestamo</th>
+                    <th>Fecha maxima</th>
+                    <th>Fecha de devolucion</th>
                 </tr>
             </thead>
             <tbody>
-                {% for autor in autores %}
+                {% for prestamo in prestamos %}
                 <tr>
-                    <td>{{ autor.nombre }}</td>
-                    <td>{{ autor.apellido }}</td>
-                    <td>{{ autor.bibliografia }}</td>
+                    <td>{{ prestamo.libro }}</td>
+                    <td>{{ prestamo.usuario }}</td>
+                    <td>{{ prestamo.fecha_prestamo }}</td>
+                    <td>{{ prestamo.fecha_maxima}}</td>
+                    <td>{{ prestamo.fecha_devolucion }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

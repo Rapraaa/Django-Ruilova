@@ -1,0 +1,20 @@
+{% extends "index.html" %} 
+<!--SELECCION DE AUTORES-->
+{% block contenido %}
+<h2> Crear Autor </h2>
+
+<form method = "POST">  <!-- INVESTIGAR TODO ESTE CODIGO Y ENTENDER LA LOGICA-->
+    {% csrf_token%} <!-- crea unas cookies de sesion apra saber que el que la hace es uno y no un bot o asi, EXPLICAER MAS A DETALLE-->
+<!-- para que no tenga  algo que lo llene automatico, INVESTIGAR DE ESTO-->
+    <label for = "id_nombre" name= "nombre"> Nombre: </label>
+    <input placeholder = "Nombre. Ej Juan" type = "text" id = "id_nombre" name="nombre" required> </label><br> <br>
+
+    <label for = "id_apellido" name= "apellido"> Apellido: </label>
+    <input placeholder = "Apellido Ej. Perez" type = "text" id = "id_apellido" name="apellido" required> </label> <br> <br> <!--INVESTIGAR TODO ESTO-->
+<!-- EL BR HACE UN SALTO DE LINEA PARA QUE CAIGA EN CASCADA TODO-->
+    <label for = "id_bibliografia" name= "bibliografia"> Bibliografia: </label>
+    <input placeholder = "Resumen del autor" type = "text" id = "id_bibliografia" name="bibliografia" required> </label><br> <br>
+
+    <button type="submit">Guardar</button>
+</form> 
+{% endblock %}

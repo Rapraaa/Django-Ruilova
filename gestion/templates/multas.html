@@ -60,23 +60,27 @@
         }
     </style>
 
-    <h2>Autores Registrados</h2>
+    <h2>Multas Registradas</h2>
 
     <div class="tabla-container">
         <table class="tabla-morada">
             <thead>
                 <tr>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Bibliografía</th>
+                    <th>Prestamo</th>
+                    <th>Tipo</th>
+                    <th>Monto</th>
+                    <th>Pagado</th>
+                    <th>Fecha</th>
                 </tr>
             </thead>
             <tbody>
-                {% for autor in autores %}
+                {% for multa in multas %}
                 <tr>
-                    <td>{{ autor.nombre }}</td>
-                    <td>{{ autor.apellido }}</td>
-                    <td>{{ autor.bibliografia }}</td>
+                    <td>{{ multa.prestamo }}</td>
+                    <td>{{ multa.tipo }}</td>
+                    <td>{{ multa.monto }}</td>
+                    <td>{{ multa.pagado }}</td>
+                    <td>{{ multa.fecha }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -1,0 +1,27 @@
+{% extends "index.html" %} 
+<!--SELECCION DE AUTORES-->
+{% block contenido %}
+<h2> Crear Libros </h2>
+
+<form method = "PHOST">  <!-- INVESTIGAR TODO ESTE CODIGO Y ENTENDER LA LOGICA-->
+    {% csrf_token%} <!-- crea unas cookies de sesion apra saber que el que la hace es uno y no un bot o asi, EXPLICAER MAS A DETALLE-->
+<!-- para que no tenga  algo que lo llene automatico, INVESTIGAR DE ESTO-->
+    <label for = "id_titulo" name= "titulo"> Titulo: </label>
+    <input placeholder = "Titulo. Ej El principito" type = "text" id = "id_titulo" name="titulo" required> </label> <br> <br>
+
+    <label for = "id_autor" name= "autor"> Autor: </label> <!-- en el for hay que poner id uy luego el nombre si o si?????????--> 
+    <!--INVESTIGAR TODO ESTO-->
+    <!-- AHORA CREAMOS UN SELECTION QUE ES PARA QUE SAQUE UNA LSITA CON TODOS NUESTROS AUTORES-->
+    <select id= "id_autor" name="autor" required>                
+        <option value="">-- Seleccione un autor </option> <!--EXPLICAR ESTO DE LOPTION TAMBIEN--> <!-- creo que es como que da una opcion inicial, para que le deinsturciones al usuario-->
+        {% for autor in autores%} <!--RECORREMOS TODOS LOS AUTORES PARA QUE LOS PONGA EN EL OPTION-->
+        <option value="{{ autor.id }}">
+            {{autor.nombre}} - {{autor.apellido}}
+        </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Guardar</button>  <!--EL BOTON PARA GUARDAR EXPLICARRRRRRRRRRRRRRRRRRRRRRRRR-->
+
+</form> 
+{% endblock %}
