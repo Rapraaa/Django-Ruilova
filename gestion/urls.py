@@ -14,6 +14,7 @@ urlpatterns = [
     #AUTORES
     path("autores/", lista_autores, name="lista_autores"),
     path("autores/nuevo/", crear_autor, name="crear_autor"),
+    path("autores/<int:id>/editar/", crear_autor, name="editar_autores"),
     #PRESTAMOS
     path("prestamos/", lista_prestamos, name="lista_prestamos"),
     path("prestamos/nuevo/", crear_prestamo, name="crear_prestamo"),
@@ -23,8 +24,9 @@ urlpatterns = [
     path('multas/', lista_multa, name="lista_multa"),
     path('multas', crear_multa, name="crear_multa"), #hay que ponerle relacion con prestamos
     #PRUEBAS
-    path("pruebas/", pruebas, name="pruebas"),
-]
+    path("pruebas/", pruebas, name="pruebas"), #A QUE LLAMA EL SEUGNDO NOMBRE? EL PATH EL ANTES DE LNAME
+#explicar que hace lo del int id
+]  #hay que poner el mismo crear autor para los 2
 
 #enlazar prestamo a la multa
 #ACA ESTAMOS CREANDO LOS URL QUE VAMOS A MANEJAR, EN ESE CASO SERIA LOCALHOST/LIBROS Y LLAMARA AL PATH DE LIBROS Y ASI CON TODO

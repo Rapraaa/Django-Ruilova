@@ -1,0 +1,45 @@
+{% extends "index.html" %} 
+<!--SELECCION DE AUTORES-->
+{% block contenido %}
+<h2> Crear Prestamo </h2>
+
+<form method = "POST">  <!-- INVESTIGAR TODO ESTE CODIGO Y ENTENDER LA LOGICA-->
+    {% csrf_token%} <!-- crea unas cookies de sesion apra saber que el que la hace es uno y no un bot o asi, EXPLICAER MAS A DETALLE-->
+<!-- para que no tenga  algo que lo llene automatico, INVESTIGAR DE ESTO-->
+ <!-- que es el crsf csrf_token-->
+    <br>
+    <br> <label for = "id_libro" name= "libro"> Libro: </label>
+    <select id= "id_libro" name="libro" required>  <br> <br> <!-- en name se usa -->             
+        <option value="">-- Seleccione un Libro </option> <!--EXPLICAR ESTO DE LOPTION TAMBIEN--> <!-- creo que es como que da una opcion inicial, para que le deinsturciones al usuario-->
+        {% for libro in libros%} <!--RECORREMOS TODOS LOS AUTORES PARA QUE LOS PONGA EN EL OPTION-->
+            <option value="{{ libro.id }}">
+            {{libro.titulo}} 
+        </option>
+        {% endfor %}
+    </select> <br>
+    
+
+
+    <br><label for = "id_usuario" name= "usuario"> Usuario: </label> <!-- en el for hay que poner id uy luego el nombre si o si?????????--> 
+    <!--INVESTIGAR TODO ESTO-->
+    <!-- AHORA CREAMOS UN SELECTION QUE ES PARA QUE SAQUE UNA LSITA CON TODOS NUESTROS (este codigo es reciclado)AUTORES-->
+    <select id= "id_usuario" name="usuario" required>                
+        <option value="">-- Seleccione un Usuario </option> <!--EXPLICAR ESTO DE LOPTION TAMBIEN--> <!-- creo que es como que da una opcion inicial, para que le deinsturciones al usuario-->
+        {% for usuario in usuarios%} <!--RECORREMOS TODOS LOS AUTORES PARA QUE LOS PONGA EN EL OPTION-->
+                                <!-- EL valor del IN debe ser el que esta definido en COMILLAS-->
+            <option value="{{ usuario.id }}">{{usuario.username}}</option> <!-- pq username? cdonde veo eso o se que variables hay-->
+        {% endfor %}
+    </select></br>
+
+    <br><label for = "id_fecha_prestamo" name= "fecha_prestamos"> Fecha: </label>
+    <input type ="date" id="id_fecha_prestamo" name = "fecha_prestamos" value="{{fecha}}"required></br> 
+    <!-- CON EL VALUE fecha hacemos que por defecto se ponga la fecha de hoy-->
+    <!-- POR QUE ACA ES INOUT Y NO SELECT?? pOR QUE MNO PASSA NADA AUNQUE NO LO--> 
+    <!-- COMO USAR EL TYPE-->
+    <!-- traemos la fecha que sacamos en el view -->
+    
+
+    <button type="submit">Guardar</button>  <!--EL BOTON PARA GUARDAR EXPLICARRRRRRRRRRRRRRRRRRRRRRRRR-->
+
+</form> 
+{% endblock %}

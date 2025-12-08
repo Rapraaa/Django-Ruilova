@@ -78,6 +78,9 @@
                     <td>{{ autor.apellido }}</td>
                     <td>{{ autor.bibliografia }}</td>
                 </tr>
+                    <td> <!--va a enviar un autor id, es decir el parametro que pide de int id-->
+                        <a href="{% url 'editar_autores' autor.id %}">Editar</a>
+                    </td>
                 {% endfor %}
             </tbody>
         </table>

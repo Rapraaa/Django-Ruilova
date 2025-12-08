@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.utils import timezone
+from datetime import timedelta
 # Create your models here.
 class Autor(models.Model): #parecido a django, 
 #aca ya no necesitamos eso del guion bajo name, description nada de eso
@@ -36,7 +37,7 @@ class Prestamo(models.Model):
     fecha_prestamos = models.DateField(default = timezone.now) #TENEMOS QUE IMPORTAR LA LIBRERIA DE TIMEZOMNE "from django.utils import timezone"
     #para fechas hay datetime field, y el date field, uno no usa hora
     fecha_maxima = models.DateField()
-    fecha_devolucion = models.DateField(blank=True, null=True)
+    fecha_devolucion = models.DateField(blank=True, null=True) 
     #EN DJANGO, POR DEFECTO TODOS LOS CAMPOS QUE QUEREMOS VAN A SER OBLIGATORIOS, aca no hay que poner el required = true, siempre seran obligatorios
     #si quieres que no sean obligatorios hay que poner "blank=True y null=True" asi permite registros blancos y nulos
     
@@ -67,7 +68,18 @@ class Prestamo(models.Model):
     #la funcion del dias retraso esta creando un atributo a traves de una funcion, osea a pesar de ser una funcion es un
     #atributo propio de la funcion, por eso lo podemos llamar, dias retraso se convierte en un atributo, asi que no tenemos que hacer
     #compute o meterlo dentro de otro atributo, bacansisimo
+    #@property
+    #def calculo_fecha_maxima(self):
+    #    dias = 7
+    #    hoy = timezone.now().date() #date paa que solo saque fecha y no hora
+    #    fecha_ref = self.fecha_prestamos or hoy
+    #    if not self.fecha_maxima:
+    #        self.fecha_maxima = fecha_ref + timedelta(days=dias) #time delta apara sumar dias
+    #        return self.fecha_maxima
+        
 
+
+    
     #AHORA EL TEMA DE LA MULTA
     
 class multa(models.Model):
