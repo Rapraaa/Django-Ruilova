@@ -41,6 +41,12 @@ class Prestamo(models.Model):
     #EN DJANGO, POR DEFECTO TODOS LOS CAMPOS QUE QUEREMOS VAN A SER OBLIGATORIOS, aca no hay que poner el required = true, siempre seran obligatorios
     #si quieres que no sean obligatorios hay que poner "blank=True y null=True" asi permite registros blancos y nulos
     
+    class Meta: #PARA LA METADADDA, APRENDER POO PARA VER QUE ES ESTO DE UN CLASS DEONTRO DE OTRO CLASS
+        permissions= {
+            ("Ver_prestamos", "Puede_ver_prestamos"),
+            ("Gestionar_prestamos", "Puede_ver_prestamos")
+        }
+        
     def __str__(self):
         return f"prestamo de {self.libro} a {self.usuario}" #se usan CORCHETES, aca cramos un mensaje para el nombre del objeto
     

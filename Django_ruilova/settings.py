@@ -30,7 +30,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+#redirecciones
+LOGIN_REDIRECT_URL = "index"
 
+LOGIN_URL = 'login'
+
+#logout?
 # Application definition
 
 INSTALLED_APPS = [

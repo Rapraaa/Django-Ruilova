@@ -4,6 +4,11 @@ from django.contrib.auth.decorators import login_required #permite que una funci
 from django.utils import timezone
 from django.conf import settings 
 from .models import Autor, Libro, Prestamo, multa#importara las variables del settings  #PQ ACA NO ES DJANGO.MODELS Y SOLO ES .MODELS??
+from django.http import HttpResponseForbidden #para que lleve al forbiden
+from django.contrib.auth.forms import UserCreationForm #EES EL FORMULARIO PARA CREAR USUARIOS QUE YA VIENE CON DJANGO
+#PARA NO TENER QUE CREARLO NOSOTROS MISMOS
+from django.contrib.auth import login #el login que usamos para crear usuarios
+
 # Create your views here.
 
 def index(request): #llamamos o obetenmos como respuesta un request, osea va a devolver la info que nos de el navegador, cabezeras, cookies, etc
@@ -46,6 +51,7 @@ def lista_autores(request):
     autores = Autor.objects.all() #SELECT * FROM AUTORES #HAY QUE IMPORTAR EL AUTOR DEL MODELS PARA QUE LO RECONOZCA
     return render(request, 'gestion/templates/autores.html', {'autores' : autores} ) #explicar el render y quequest
  
+@login_required
 def crear_autor(request, id=None): #le pedimos el id pero puede ser none? #EXPLICAR #si el id no tiene valor sale con none
      #aca pedimos el parametro request, ya que sin request no hay como saber si es post o no                
     #EXPLICAER QUE ES UN METODO POST
@@ -97,8 +103,11 @@ def crear_autor(request, id=None): #le pedimos el id pero puede ser none? #EXPLI
 def lista_prestamos(request): #el pass  se ponia para que bo de error por mientras
     Prestamos = Prestamo.objects.all() #SELECT * FROM AUTORES #HAY QUE IMPORTAR EL AUTOR DEL MODELS PARA QUE LO RECONOZCA
     return render(request, 'gestion/templates/prestamos.html', {'prestamos' : Prestamos} ) #eEL DE LA izquierda, el de comillas es el que se llama en html
-                                                                                            #el de la derecha es la variable que creamos
+ #el de la derecha es la variable que creamos
+@login_required     #COMO USAR ESTO CORRECTANEBTE                                                                                     
 def crear_prestamo(request): 
+   # if not request.user.has.perm(gestion.Gestion_prestamos):
+    #    return HttpResponseForbidden() #from django.http import HttpResponseForbidden
     #libros = Libro.objects.all #sacamos todos los datos del libro
     #enves de objects all podemos usar filter
     libros = Libro.objects.filter(disponible = True) #mejor que todos, solo dan los disponibles
@@ -145,3 +154,17 @@ def pruebas(request):
     #se define para que sepa que es title
     title = settings.TITLE #de setings la variable title
     return render(request, "gestion/templates/pruebas.html", {'titulo': title})
+
+def registro(request): #EXPLICAR TODITO ESTO DE 0, ENTENDERLO BIEN #EXPLICAR ESO DEL REQUEST, NO ENTIEND OQEU ES NI COMO FUNCIONA
+    #SI NO LO PONGO EN EL PARENSETISS NO VALE
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST) #importamos para esto
+        if form.is_valid():
+            usuario = form.save()
+            login(request, usuario)
+
+    else:
+        form = UserCreationForm
+    return render(request, 'gestion/templates/registration/registro.html', {'form':form}) #mandamos como parametro el formulario, como es eso de mandar
+#parametros
+

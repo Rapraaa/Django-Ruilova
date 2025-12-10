@@ -1,6 +1,9 @@
 {% extends "index.html" %} 
 <!--SELECCION DE AUTORES-->
 {% block contenido %}
+{% if not user.is_authenticated%}
+
+{% endif %}
 <h2>{{titulo}} </h2>
 
 <form method = "POST">  <!-- INVESTIGAR TODO ESTE CODIGO Y ENTENDER LA LOGICA-->
@@ -17,4 +20,5 @@
 
     <button type="submit">{{texto_boton}}</button> <!-- para que el texto cambie-->
 </form> 
+
 {% endblock %}

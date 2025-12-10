@@ -102,6 +102,27 @@
                     <!-- si hay comillas dobles en href el otro debe tener simples -->
                     <li class="nav-item"><a class="nav-link" href="{% url 'lista_prestamos'%}">Préstamos</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'lista_multa' %}">Multas</a></li>
+                    <!-- VOTON DE CERRAR SESION-->
+                    {% if user.is_authenticated %} <!-- si el usuari oesta logeado sale elboton sino no-->
+                    <form method='POST' action="{% url 'logout' %}">
+                        {% csrf_token %}<!-- POR QUE ESTO NECESITA UN FORM??????????????????-->
+                    <li class="nav-item"><!-- POR QUE ESTO NECESITA UN FORM??????????????????-->
+                        <!-- explicar TODO ESTO DEL BOTONNNNNNNNNNNNNN??????????????????-->
+                        <button type="submit">Cerrar sesión</button></li>
+                    </form>
+                    {% endif %}
+
+
+
+
+                    {% if not user.is_authenticated %} <!-- si el usuari oesta logeado sale elboton sino no-->
+                    <form method='POST' action="{% url 'login' %}">
+                        {% csrf_token %}<!-- POR QUE ESTO NECESITA UN FORM??????????????????-->
+                    <li class="nav-item"><!-- POR QUE ESTO NECESITA UN FORM??????????????????-->
+                        <!-- explicar TODO ESTO DEL BOTONNNNNNNNNNNNNN??????????????????-->
+                        <button type="submit">Ingresar</button></li>
+                    </form>
+                    {% endif %}
                 </ul>
             </div>
         </div>

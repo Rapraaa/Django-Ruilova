@@ -1,5 +1,8 @@
 from django.urls import path
 from .views import *
+from django.contrib.auth import views as auth_views #ESTO NECESITAMOS IMPORTAR PARA LO DEL LOGIN Y CAMBIO DE CONTRASE;A, EXPLICAR IGUALLLLLLLLLLLLLLLL
+#ALLLLLLLLLLLL
+from django.contrib.auth.decorators import login_required #NECESARIO PARA EL LOGIN REQUIRED ES UN DECORADOR
 
 urlpatterns = [ 
     path("", index, name="index"),#por ahora va a dar error pq aun no creamos en views ninguna vista
@@ -9,6 +12,21 @@ urlpatterns = [
 
 #EL PRIMER PATH NOS LLEVARA A UN INDEX, OSEA EN VEZ DE LA DE DJANGO SERA UNA PROPIA DE NOSOTROS
 
+
+    #LOGIN
+    path('login/', auth_views.LoginView.as_view(), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'), #EXPLICAR TODOOOOO ESTO DEL LOGIIIIIIIIIIIIIIIIIIIIIIIN
+
+    #cambio de contraSE;A
+    path('password/change', auth_views.PasswordChangeView.as_view(), name='password_change'), #PQ SE DEBEN LLAMA ASI, QUE HACEN REALMENTE EXPLICAR TODOO
+    path('password/change/done', auth_views.PasswordChangeDoneView.as_view(), name='password_change_done'),  #TODITO LO DEL LOGIN ENTENDER
+
+    #registro
+
+    path('registro/', registro, name="registro"), #oq aca mno usamos auth views y arriba si, entender lo del auth bviews
+
+
+    # LIBROS PRESTAMOS Y TODOO ESO
     path('libros/', lista_libros, name="lista_libros"),
     path('libros/nuevo/', crear_libro, name="crear_libro"),
     #AUTORES

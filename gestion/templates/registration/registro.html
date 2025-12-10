@@ -1,0 +1,17 @@
+{% extends "index.html" %}
+
+{% block contenido %}
+
+<h2>Registro de usuario</h2>
+
+<form method='POST'>
+    {% csrf_token %}
+    {{form.as_div}} <!-- traemos el form como div, que es div-->
+    <!-- {{form.as_p}} que pasa si lo pongo as p, que otras formas hay de cargarlo-->
+     <button type="submit">Registrar</button> <!-- EL BOTON DENTRO DEL FORM SINO NO HARA NADA-->
+    <!-- ENTENDER ESO DE LOS BOTONES-->
+</form>
+
+<button type="submit">Registrar</button>
+
+{% endblock %}
