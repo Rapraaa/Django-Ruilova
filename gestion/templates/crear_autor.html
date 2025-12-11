@@ -18,7 +18,7 @@
     <label for = "id_bibliografia" name= "bibliografia"> Bibliografia: </label>
     <input placeholder = "Resumen del autor" type = "text" id = "id_bibliografia" name="bibliografia" value="{{autor.bibliografia| default_if_none:""}}" required> </label><br> <br>
 
-    <button type="submit">{{texto_boton}}</button> <!-- para que el texto cambie-->
+    <button type="submit" class = "btn btn-custom mt-2">{{texto_boton}}</button> <!-- para que el texto cambie-->
 </form> 
 
 {% endblock %}

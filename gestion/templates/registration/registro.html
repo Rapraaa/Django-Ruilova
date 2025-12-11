@@ -6,12 +6,14 @@
 
 <form method='POST'>
     {% csrf_token %}
-    {{form.as_div}} <!-- traemos el form como div, que es div-->
-    <!-- {{form.as_p}} que pasa si lo pongo as p, que otras formas hay de cargarlo-->
-     <button type="submit">Registrar</button> <!-- EL BOTON DENTRO DEL FORM SINO NO HARA NADA-->
+    {{form.as_div}} <!-- traemos el form como div, que es div--> <!-- {{ form.as_div }} (Nuevo en Django 4.1): Envuelve cada campo (label + input) en un <div>. 
+    Es el mejor para usar con CSS moderno (Flexbox/Grid).
+    {{ form.as_p }} (El clásico): Envuelve cada campo en un párrafo <p>. Se usa mucho en tutoriales viejos, pero deja mucho espacio entre líneas.
+     {{ form.as_table }}: Lo mete en una tabla <tr>. (Casi no se usa hoy en día porque no es "responsive").
+    {{ form.as_ul }}: Lo mete en una lista de puntos <li>-->
+     <button type="submit" class="btn btn-custom mt-2">Registrar</button> <!-- EL BOTON DENTRO DEL FORM SINO NO HARA NADA-->
     <!-- ENTENDER ESO DE LOS BOTONES-->
 </form>
 
-<button type="submit">Registrar</button>
 
 {% endblock %}

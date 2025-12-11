@@ -8,14 +8,16 @@ from django.http import HttpResponseForbidden #para que lleve al forbiden
 from django.contrib.auth.forms import UserCreationForm #EES EL FORMULARIO PARA CREAR USUARIOS QUE YA VIENE CON DJANGO
 #PARA NO TENER QUE CREARLO NOSOTROS MISMOS
 from django.contrib.auth import login #el login que usamos para crear usuarios
+from django.contrib.auth.decorators import permission_required
+
 
 # Create your views here.
 
-def index(request): #llamamos o obetenmos como respuesta un request, osea va a devolver la info que nos de el navegador, cabezeras, cookies, etc
-    title = settings.TITLE  #USARIA LA VARIABLE QUE CREAMOS EN SETTINGS, ENTONCES SI CAMBIAMOS SETTINGS CAMBIA RODO
+def index(request): #llamamos o obetenmos como respuesta un request, osea va a devolver la info que nos de el navegador, cabezeras, cookies, etc  #USARIA LA VARIABLE QUE CREAMOS EN SETTINGS, ENTONCES SI CAMBIAMOS SETTINGS CAMBIA RODO
+    #el user.username ya se envia por defecto
     #llamamos el TITULO TAMBIEN
     #asi si cmabio en settings cambio en todo
-    return render(request, "gestion/templates/home.html", {'titulo': title}) #EXPLICAR ESTO, \ explicar y practicar
+    return render(request, "gestion/templates/home.html") #EXPLICAR ESTO, \ explicar y practicar
 #hay que crear la carpeta templates en gestion y el archivo index.html
 #cuando no devuelva nada es el path raiz, cuando el path raiz sea ejecutada llama a la funcion index
 #ahora vamos a crear los demas paths
@@ -100,11 +102,16 @@ def crear_autor(request, id=None): #le pedimos el id pero puede ser none? #EXPLI
           #  autor.save()  #EXPLICAR POR QUE LA A DEBE SER MINUSCULA
        # return redirect('lista_autores')
    # return render(request, 'gestion/templates/editar_autor.html', {'autor' : autor})
+@login_required 
+@permission_required('gestion.Ver_prestamos', raise_exception=True,) #hay que poner aparte del nombre del permiso de donde viene (gestion.)
 def lista_prestamos(request): #el pass  se ponia para que bo de error por mientras
     Prestamos = Prestamo.objects.all() #SELECT * FROM AUTORES #HAY QUE IMPORTAR EL AUTOR DEL MODELS PARA QUE LO RECONOZCA
     return render(request, 'gestion/templates/prestamos.html', {'prestamos' : Prestamos} ) #eEL DE LA izquierda, el de comillas es el que se llama en html
  #el de la derecha es la variable que creamos
-@login_required     #COMO USAR ESTO CORRECTANEBTE                                                                                     
+@login_required 
+@permission_required('gestion.Gestionar_prestamos', raise_exception=True,) #SI NO PONEMOS raise_exepction true en vez de el error lo mandara al login 
+
+#debe estar iniciado sesion y con permisos                                                                                 
 def crear_prestamo(request): 
    # if not request.user.has.perm(gestion.Gestion_prestamos):
     #    return HttpResponseForbidden() #from django.http import HttpResponseForbidden
@@ -113,7 +120,7 @@ def crear_prestamo(request):
     libros = Libro.objects.filter(disponible = True) #mejor que todos, solo dan los disponibles
     usuarios = User.objects.all() #DE DONDE VIENE ESTE USER_ COMO LO USO_ PARA QUE SIRVE? COMO LO VEO O EDITO?
     #EL METODO GET ES CUANDO BSUCAAS ALGO Y EL OBTIENES ALGO DE L SERVIDOR
-    #EL METODO PSOT ES CUANDO LE DAS UNA INFORAMCION AL SERVIDOR PARA QUE ESE HAGA ALGO CON ELLA
+    #EL METODO PSOT ES CUANDO LE DAS UNA INFORAMCION AL SERVIDOR PARA QUE ESE HAGA ALGO CON ELLA 
     if request.method == 'POST': #buscar como consigue request method el metodo
                               #si es que el metodo es post
         libros_id = request.POST.get('libro')
@@ -123,15 +130,17 @@ def crear_prestamo(request):
         #fechas_devolucion = request.POST.get('fecha_devolucion')  #automatico
         if libros_id and usuarios and fechas_prestamos: #si ya existe, osea asi no lleno en blanco
             libros = get_object_or_404(Libro, id=libros_id)
-            usuarios = get_object_or_404(User, id=usuarios_id)
+            usuarios = get_object_or_404(User, id=usuarios_id) #estos se usan apra cuando es asi la lsita que se muestra
+            #pq de la lista elegimos es el id recordemos, el value es su id, esto que guardamos es el id para  identifiacar
+            #si lo que elegios realmente existe
             prestamo = Prestamo.objects.create(libro=libros, 
                                     usuario=usuarios, 
                                     fecha_prestamos=fechas_prestamos)
                                     #fecha_maxima=fechas_maximas) 
                                     #fecha_devolucion=fechas_devolucion)
-            libros.disponible = False
+            libros.disponible = False #como ay prestamo el libro ya no esta diponible
             libros.save()
-            return redirect('lista_prestamos', id=prestamo.id) #EXPKCIAER ACCA, INVEESTIGAR ESTO HASTA ENTENDER TODITO COMPLETAMENTE
+            return redirect('lista_prestamos',) #id=prestamo.id) #luego para eidtar necesitare el id prestamo, por ahora asi esta bien
         #QUE HACE EL .id???? COMO FUNCIONA??
     fecha = (timezone.now().date()).isoformat # explciar esto QUE QUE EUQ?? expolicar
     #YYYY MM DD
@@ -140,7 +149,7 @@ def crear_prestamo(request):
                   'fecha' : fecha})   #EL ERRORE QUE TUVIMOS AHORITA FUE ACA, HAY QUE ABRIR LLAVE, PONER VALORES TODOS
 # Y LUEGO CERRAR LLAVE, NO POENMOS ABRIR LALVE VALOR, CERRRAR LAVVE, COMO ABRIRR LLAVE, CERRAR, Y ASI, ESO ROMPE TODITO
 
-def detalle_prestamo(request):
+def detalle_prestamo(request): #para editar o ver detalle, no se, aun falta
     pass
 
 def lista_multa(request):
@@ -148,23 +157,45 @@ def lista_multa(request):
     return render(request, 'gestion/templates/multas.html', {'multas' : multas} ) #explicar el render y quequest
                                                     #este multas es el que se hace en el for para que saque los datos
 def crear_multa(request):  
-    pass
+    prestamos = Prestamo.objects.filter(fecha_devolucion = None) #para no poder haer multas si ya devolvieron el libro, no tendria sentido
+
+    if request.method == 'POST': #si quieren enviar
+        prestamo_id = request.POST.get('prestamos') # el related name es prestamos#aca tenemos el id
+        tipo = request.POST.get('tipo')
+
+        if prestamo_id and tipo:
+            prestamo = get_object_or_404(Prestamo, id=prestamo_id)
+            #tipo = get_object_or_404(multa, id=tipo) al ser un choices no ahce falta            monto_calculado = prestamo.multa_retraso(tipo)
+            multa.objects.create(
+                prestamo=prestamo,
+                tipo=tipo, 
+            )
+            return redirect('lista_multas')
+    return render(request, 'gestion/templates/crear_multa.html', {'prestamos': prestamos})
+
 
 def pruebas(request):
     #se define para que sepa que es title
     title = settings.TITLE #de setings la variable title
     return render(request, "gestion/templates/pruebas.html", {'titulo': title})
 
-def registro(request): #EXPLICAR TODITO ESTO DE 0, ENTENDERLO BIEN #EXPLICAR ESO DEL REQUEST, NO ENTIEND OQEU ES NI COMO FUNCIONA
+
+def registro(request): #"Hola, soy la función encargada del registro. Dame la carpeta de información del cliente
     #SI NO LO PONGO EN EL PARENSETISS NO VALE
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST) #importamos para esto
-        if form.is_valid():
-            usuario = form.save()
-            login(request, usuario)
+    if request.method == 'POST':#Aquí el camarero abre la carpeta y mira una etiqueta que dice MÉTODO
+    #GET: Significa "Solo vengo a mirar" (Ver la página).
+    #POST: Significa "Vengo a entregar datos privados" (Enviar el formulario).
+    #Traducción de la línea: "¿El usuario le dio clic al botón 'Enviar' o solo acaba de entrar a la página?"
+        
+        form = UserCreationForm(request.POST) #importamos para esto, #Crea un objeto formulario (form) usando el molde de registro, 
+        #y rellénalo con los datos que escribió Juan (request.POST)
+        if form.is_valid(): #¿Están bien los datos o Juan escribió tonterías?, que no sea repetido el usuario, que sean igual las contrase;as y asi
+            usuario = form.save() #agarra los datos del formulario, conviértelos en una fila de SQL y guárdalos 
+            #en la base de datos permanentemente. Y devuélveme al usuario creado en la variable usuario
+            login(request, usuario)#ya que te acabas de registrar con éxito, te inicio sesión automáticamente ahora mismo para que entres directo
 
     else:
-        form = UserCreationForm
+        form = UserCreationForm() #parentesis? para instanciarlo
     return render(request, 'gestion/templates/registration/registro.html', {'form':form}) #mandamos como parametro el formulario, como es eso de mandar
 #parametros
 

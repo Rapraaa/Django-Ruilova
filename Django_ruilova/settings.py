@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'gestion'
+    'gestion',
+    'django_extensions' #este es para unas extensiones utiles, lo use para refrescar un permiso que no se cambiaba correctamente
 ]
 
 MIDDLEWARE = [

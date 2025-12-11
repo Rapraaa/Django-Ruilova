@@ -1,0 +1,30 @@
+{% extends "index.html" %} 
+<!--SELECCION DE AUTORES-->
+{% block contenido %}
+<h2> Crear Multa </h2>
+
+<form method = "POST">  <!-- INVESTIGAR TODO ESTE CODIGO Y ENTENDER LA LOGICA-->
+    {% csrf_token%} <!-- crea unas cookies de sesion apra saber que el que la hace es uno y no un bot o asi, EXPLICAER MAS A DETALLE-->
+<!-- para que no tenga  algo que lo llene automatico, INVESTIGAR DE ESTO-->
+    <select id= "id_prestamo" name="prestamo" required>                
+        <option value="">Seleccione un prestamo </option> <!--EXPLICAR ESTO DE LOPTION TAMBIEN--> <!-- creo que es como que da una opcion inicial, para que le deinsturciones al usuario-->
+        {% for prestamo in prestamos%} <!--RECORREMOS TODOS LOS AUTORES PARA QUE LOS PONGA EN EL OPTION-->
+        <option value="{{ prestamo.id }}">
+            {{prestamo.libro}} - {{prestamo.usuario}}
+        </option>
+        {% endfor %}
+    </select>
+
+    
+<br> </br>
+    <select id="id_tipo" name="tipo" required>
+        <option value="">Seleccione el tipo de multa</option>
+        <option value="r">Retraso</option>
+        <option value="p">Pérdida</option>
+        <option value="d">Deterioro</option> <!-- importante el value-->
+    </select>
+<li> <!-- para que vaya a la linea de abajo-->
+    <button type="submit" class="btn btn-custom mt-2" >Guardar</button> 
+</form> 
+
+{% endblock %}

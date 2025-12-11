@@ -4,7 +4,8 @@
 
 <h2> Iniciar Sesión </h2>
 
-{% if form.errors %} <!--    mensaje de error, EXPLICARRR--> <!-- - si el form viene con error saldra ese error -->
+{% if form.errors %} <!--    Sirve para mostrar errores que no pertenecen a un campo específico, sino a la lógica general del formulario.
+ejemplo que las contrase;as sea distintas, o el usuario ya sirve , asi que si detectamos un error enviara ese mensaje-->
 <p>Usuario o contraseña incorrecta
 
 {% endif %}
@@ -18,7 +19,7 @@
     <label for='id_password'> Contraseña: </label>
     <input type="password" name="password" id="id_password" required><br/> <!-- tipo password-->
 
-    <button type="submit">Entrar</button>
+    <button type="submit" class = "btn btn-custom mt-2">Entrar</button>
 
 </form>
 

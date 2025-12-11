@@ -86,7 +86,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-custom navbar-dark sticky-top">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">
+            <a href ="{% url 'index' %}" class="navbar-brand fw-bold" href="#">
                 <i class="fas fa-book-reader me-2"></i> BIBLIO<span style="color: var(--light-accent);">TECH</span>
             </a>
             
@@ -103,25 +103,25 @@
                     <li class="nav-item"><a class="nav-link" href="{% url 'lista_prestamos'%}">Préstamos</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'lista_multa' %}">Multas</a></li>
                     <!-- VOTON DE CERRAR SESION-->
+
                     {% if user.is_authenticated %} <!-- si el usuari oesta logeado sale elboton sino no-->
+                    <li class= "nav-item">
                     <form method='POST' action="{% url 'logout' %}">
                         {% csrf_token %}<!-- POR QUE ESTO NECESITA UN FORM??????????????????-->
-                    <li class="nav-item"><!-- POR QUE ESTO NECESITA UN FORM??????????????????-->
-                        <!-- explicar TODO ESTO DEL BOTONNNNNNNNNNNNNN??????????????????-->
-                        <button type="submit">Cerrar sesión</button></li>
+                     <!-- necesita un form pq estamos haciendo un formulario con el metodo post para enviarlo-->
+                        <!-- form post se usa Cuando vas a cambiar algo en la base de datos o realizar una acción de seguridad 
+                         (Guardar datos, Borrar producto, Cerrar sesión)
+                         Cerrar sesión es una acción destructiva: estás borrando la sesión del usuario en el servidor. Por eso, por estándar, debe ser POST-->
+                        <button type="submit" class="nav-link">Cerrar sesión</button></li>
                     </form>
+                    </li>
                     {% endif %}
-
-
-
-
-                    {% if not user.is_authenticated %} <!-- si el usuari oesta logeado sale elboton sino no-->
-                    <form method='POST' action="{% url 'login' %}">
-                        {% csrf_token %}<!-- POR QUE ESTO NECESITA UN FORM??????????????????-->
-                    <li class="nav-item"><!-- POR QUE ESTO NECESITA UN FORM??????????????????-->
-                        <!-- explicar TODO ESTO DEL BOTONNNNNNNNNNNNNN??????????????????-->
-                        <button type="submit">Ingresar</button></li>
-                    </form>
+                    <button type="submit" class="nav-link">{{ user.username }}</button></li>
+                    {% if not user.is_authenticated %} <!-- BOTON PARA INGRESAR-->
+                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Ingresar</a></li>
+                    {% endif %}
+                    {% if not user.is_authenticated %} <!-- BOTON PARA INGRESAR-->
+                    <li class="nav-item"><a class="nav-link" href="{% url 'registro' %}">Registrarse</a></li>
                     {% endif %}
                 </ul>
             </div>
@@ -132,9 +132,9 @@
         <div class="container">
             <h1 class="display-4 fw-bold">Gestión Bibliotecaria</h1>
             <p class="lead mb-4" style="color: var(--light-accent);">Administra el conocimiento con elegancia.</p>
-            <button class="btn btn-light text-primary fw-bold rounded-pill px-5 py-2 shadow">
+            <a href ="{% url 'crear_prestamo' %}" class="btn btn-light text-primary fw-bold rounded-pill px-5 py-2 shadow">
                 <i class="fas fa-plus me-2"></i>Nuevo Préstamo
-            </button>
+            </a>
         </div>
     </header>
 

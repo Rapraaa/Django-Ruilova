@@ -15,7 +15,7 @@ urlpatterns = [
 
     #LOGIN
     path('login/', auth_views.LoginView.as_view(), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'), #EXPLICAR TODOOOOO ESTO DEL LOGIIIIIIIIIIIIIIIIIIIIIIIN
+    path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'), #el next page le dices a donde
 
     #cambio de contraSE;A
     path('password/change', auth_views.PasswordChangeView.as_view(), name='password_change'), #PQ SE DEBEN LLAMA ASI, QUE HACEN REALMENTE EXPLICAR TODOO
@@ -37,10 +37,10 @@ urlpatterns = [
     path("prestamos/", lista_prestamos, name="lista_prestamos"),
     path("prestamos/nuevo/", crear_prestamo, name="crear_prestamo"),
 
-    path("prestamos/<int:id>", detalle_prestamo, name="detalle_prestamo"),#el int id hace #EXPLICARA ESTOOO
+    #path("prestamos/<int:id>", detalle_prestamo, name="detalle_prestamo"),#el int id hace #EXPLICARA ESTOOO
     #MULTAS
     path('multas/', lista_multa, name="lista_multa"),
-    path('multas', crear_multa, name="crear_multa"), #hay que ponerle relacion con prestamos
+    path('multas/nuevo', crear_multa, name="crear_multa"), #hay que ponerle relacion con prestamos
     #PRUEBAS
     path("pruebas/", pruebas, name="pruebas"), #A QUE LLAMA EL SEUGNDO NOMBRE? EL PATH EL ANTES DE LNAME
 #explicar que hace lo del int id
