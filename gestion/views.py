@@ -9,6 +9,10 @@ from django.contrib.auth.forms import UserCreationForm #EES EL FORMULARIO PARA C
 #PARA NO TENER QUE CREARLO NOSOTROS MISMOS
 from django.contrib.auth import login #el login que usamos para crear usuarios
 from django.contrib.auth.decorators import permission_required
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView#librerias genericas para el views
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin #clae 11-12-25
+from django.urls import reverse_lazy #clae 11-12-25
+
 
 
 # Create your views here.
@@ -199,3 +203,43 @@ def registro(request): #"Hola, soy la función encargada del registro. Dame la c
     return render(request, 'gestion/templates/registration/registro.html', {'form':form}) #mandamos como parametro el formulario, como es eso de mandar
 #parametros
 
+
+
+
+
+#VISTA BASADA EN CLASES DE LIBRO
+class LibroListView(LoginRequiredMixin, ListView): #vista basada en clases (MIXIN)
+    model = Libro
+    template_name = 'gestion/templates/libros_view.html' #es como el request
+    context_object_name = 'libros' #este es el diccionario de libros que mandabamos, ES LO QUE ENVIAMSO AL HTML
+    paginate_by = 1 #es para que se divida en paginas, osea que puedas aplastar 1, luego vas a la pagina 2
+    #luego a la pagina 3, como en videos y asi, coge 10 datos y los otros 10 van a otra pagina
+
+class LibroDetalleView(LoginRequiredMixin, DetailView):
+    model = Libro
+    template_name = 'gestion/templates/detalle_libros.html'
+    context_object_name = 'libro'
+
+class LibroCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    model = Libro
+    fields = ['titulo', 'autor', 'disponible']
+    template_name = 'gestion/templates/crear_libros.html'
+    success_url = reverse_lazy('libro_list') #cuando complete, cuando haga click en el boton de crear libro haga algo
+    #el libro list es el nombre de la URL hay que rear otro para ver la diferencia entre asi y view normal
+    permission_required = 'gestion.add_libro' #el permiso que django crea por defecto, aunque siempre podemos crear nosotros
+    #TODO INVESTIGAR COMO SABER EL codename para el permiso que creeo django por defecto
+
+class LibroUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = Libro
+    fields = ['titulo', 'autor']
+    template_name = 'gestion/templates/editar_libros.html'
+    success_url = reverse_lazy('libro_list')
+    permission_required = 'gestion.change_libro'
+
+class DeleteUpdateView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    model = Libro
+    template_name = 'gestion/templates/delete_libros.html' #un confirmar tipo, estas seguro de que quieres borrar el lalala
+    success_url = reverse_lazy('libro_list')
+    permission_required = 'gestion.delete_libro'
+
+#ACA ACABA LA DE LIBRO

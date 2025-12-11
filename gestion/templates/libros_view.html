@@ -1,0 +1,100 @@
+{% extends "index.html" %}
+
+{% block contenido %}
+    <style>
+        /* Estilos para la tabla Morada Elegante */
+        .tabla-container {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 25px auto;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            border-radius: 10px;
+            overflow: hidden; /* Para que los bordes redondeados se noten */
+            max-width: 90%;
+        }
+
+        .tabla-morada {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 400px;
+            background-color: #ffffff;
+        }
+
+        .tabla-morada thead tr {
+            background-color: #6a1b9a; /* Morado intenso */
+            color: #ffffff;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .tabla-morada th,
+        .tabla-morada td {
+            padding: 12px 15px;
+        }
+
+        .tabla-morada tbody tr {
+            border-bottom: 1px solid #dddddd;
+        }
+
+        .tabla-morada tbody tr:nth-of-type(even) {
+            background-color: #f3e5f5; /* Morado muy clarito para intercalar */
+        }
+
+        .tabla-morada tbody tr:last-of-type {
+            border-bottom: 2px solid #6a1b9a;
+        }
+
+        .tabla-morada tbody tr:hover {
+            background-color: #e1bee7; /* Color al pasar el mouse */
+            color: #4a148c;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        h2 {
+            color: #4a148c;
+            text-align: center;
+            font-family: 'Segoe UI', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+    </style>
+
+    <h2>Libros Registrados</h2>
+
+    <div class="tabla-container">
+        <table class="tabla-morada">
+            <thead>
+                <tr>
+                    <th>Titulo</th>
+                    <th>Autor</th>
+                    <th>Disponible</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for libro in libros %}
+                <tr>
+                    <td>{{ libro.titulo }}</td>  <!-- explicar esto-->
+                    <td>{{ libro.autor }}</td>
+                    <td>{{ libro.disponible }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% if is_paginated %} <!-- si es que la pagina es paginada-->
+
+<div class = 'pagination'>
+<!-- {{ page_obj }} variable propia de odoo para las paginaciones--> 
+    {%if page_obj.has_previous%} <!-- si es que tieene una paginacion previa haga un corrido a la primera pagina-->
+    <a href = "?page=1">-Primera</a> <!-- el a tambien es un boto, estos ya son botones-->
+    <a href = "?page={{ page_obj_previous_page_number}}">-Anterior</a> <!-- EXPLCIAR OCMO FUNCIONA, te lleva a la anteior-->
+    {% endif %}
+    <span> {{ page_obj.number}} de {{ page_obj.paginator.num_pages}}</span> <!-- #el page obj numbres es en que pagina estoy de el paginator num pages es el 
+    total de paginas -->
+    {% if page_obj.has_next %}
+    <a href = "?page={{ page_obj.next_page_number}}">-Siguiente</a>
+    <a href = "?page={{ page_obj.paginator.num_pages}}">-Ultima</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}
