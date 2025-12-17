@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -26,9 +25,9 @@ TITLE = "UTE 2 semestre" #aca ponemos el titulo de la pagina web apra que este d
 SECRET_KEY = 'django-insecure-h)ry2e)7-ppto-^tf__n(y@5&02@q#xg!na_yha$3_#0vuzwbo'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = False #lo desactivamos ya 
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'biblioteca2s.com', 'www.biblioteca2s.com' ]
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'bibliotecaimperial.com', 'www.bibliotecaimperial.com' ]
 
 #redirecciones
 LOGIN_REDIRECT_URL = "index"
@@ -128,7 +127,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
