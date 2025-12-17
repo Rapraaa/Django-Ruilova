@@ -72,9 +72,9 @@ def crear_autor(request, id=None): #le pedimos el id pero puede ser none? #EXPLI
         nombre = request.POST.get('nombre')
         apellido = request.POST.get('apellido')   #ES UNO POR CADA UNO
         bibliografia = request.POST.get('bibliografia')  #lo que hace es sacar o guardar en una variable lo que saquemos de nuestro HTML
-
+        imagen = request.FILES.get('imagen') #es como el queset de imagen  pero se usa .files para archivos 
         if autor == None:
-            Autor.objects.create(nombre=nombre, apellido=apellido, bibliografia=bibliografia) #EXPLICAR QUE HACE objects create
+            Autor.objects.create(nombre=nombre, apellido=apellido, bibliografia=bibliografia, imagen=imagen) #EXPLICAR QUE HACE objects create
             return redirect('lista_autores')
         else:
             autor.nombre = nombre #EXPLICAR ESO

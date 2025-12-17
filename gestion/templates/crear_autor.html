@@ -6,7 +6,7 @@
 {% endif %}
 <h2>{{titulo}} </h2>
 
-<form method = "POST">  <!-- INVESTIGAR TODO ESTE CODIGO Y ENTENDER LA LOGICA-->
+<form method = "POST"> enctype = "multipart/form-data"  <!-- INVESTIGAR TODO ESTE CODIGO Y ENTENDER LA LOGICA-->
     {% csrf_token%} <!-- crea unas cookies de sesion apra saber que el que la hace es uno y no un bot o asi, EXPLICAER MAS A DETALLE-->
 <!-- para que no tenga  algo que lo llene automatico, INVESTIGAR DE ESTO-->
     <label for = "id_nombre" name= "nombre"> Nombre: </label>
@@ -18,6 +18,10 @@
     <label for = "id_bibliografia" name= "bibliografia"> Bibliografia: </label>
     <input placeholder = "Resumen del autor" type = "text" id = "id_bibliografia" name="bibliografia" value="{{autor.bibliografia| default_if_none:""}}" required> </label><br> <br>
 
+
+    <label for='id_imagen'>Imagen: </label>
+    <input type="file" id = "id_imagen" name="imagen" accept="image/*"/></br>  <!--el accept le decimos que acepte archivos imagen y el * es uqe acepte cualquier tipo
+    si quisieramos solo png pro ejemplo quitamos el * y ponemos ESTO -->
     <button type="submit" class = "btn btn-custom mt-2">{{texto_boton}}</button> <!-- para que el texto cambie-->
 </form> 
 

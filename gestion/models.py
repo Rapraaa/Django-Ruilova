@@ -14,6 +14,7 @@ class Autor(models.Model): #parecido a django,
     nombre = models.CharField(max_length=50) #models es tipo texto y tiene un maximo de caracteres de 50
     apellido = models.CharField(max_length=50) #lo mismo pero para apellido
     bibliografia = models.CharField(max_length=200, blank=True, null=True)
+    imagen = models.ImageField(upload_to='libros/', blank=True, null=True)
 #HAY QUE QUE ELEGIR CUAL VA A SER EL "NAME" por asi decir, el que sea el nombre o representante de la clase o objeto. en odoo usabamos el recname
 #o el display name, aca en django lo que ahcemos es lo siguiente
     def __str__(self): #por que se pone __ ?????????????????????????????????????????????????????
@@ -23,6 +24,8 @@ class Libro(models.Model): #clase para el libro
     titulo = models.CharField(max_length=20)
     #ACA TENEMOOS QUE HACER UNA RELACION, ACA NO HAY MANY2ONE COMO EN ODOO, ACA SE DEFINE DE UNA CON FOREIGN KEY, LO VOLVEMOS LALVE FORANEA
     autor = models.ForeignKey(Autor, related_name="libros", on_delete=models.PROTECT) #TAMBIEN DEBEMOS DEFINIR DE QUIEN ES LA LALVE FORANEA, en este caso de autor, tambien hay que
+    imagen = models.ImageField(upload_to='libros/', blank=True, null=True) #las imagenes de los libros, explicacion mas avanzada en obisdian
+    #upload to es donde lo vamos a cargar, en la carpeta llamada '' y blank es que le permite estar en blanco, sin imagen y null lo mismo
     #definir un related name
     #siempre en una foreign key hay que poner el ON DELETE, es decirle que hacer cuando alguien queira borrarlo, ya que tiene
     #relaciones y se podria romper segun lo que haga, digamos si borro el libro, los que tieenen prestado ese libro ya quedarian incompletos en su tabla
