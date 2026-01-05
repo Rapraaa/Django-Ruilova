@@ -49,6 +49,8 @@ urlpatterns = [
     path('libro_list/', LibroListView.as_view(), name='libro_list'), #el as view es pq en realidad es una clase, y hay que hacer que la detecten como vista
     #investigar mas lo del as view
     #QUE HAY QUE PONER EN EL NAME
+    path('multas/pagar/<int:multa_id>/', pagar_multa, name='pagar_multa'), #PARA PAGAR MULTAS ANTENTOTJAIOJDASD
+    path('prestamos/devolver/<int:prestamo_id>/', devolver_libro, name='devolver_libro'), #DEVOLVER LIBRO
 ]  #hay que poner el mismo crear autor para los 2
 
 #enlazar prestamo a la multa

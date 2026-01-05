@@ -1,45 +1,93 @@
 {% extends "index.html" %} 
-<!--SELECCION DE AUTORES-->
+
 {% block contenido %}
-<h2> Crear Prestamo </h2>
 
-<form method = "POST">  <!-- INVESTIGAR TODO ESTE CODIGO Y ENTENDER LA LOGICA-->
-    {% csrf_token%} <!-- crea unas cookies de sesion apra saber que el que la hace es uno y no un bot o asi, EXPLICAER MAS A DETALLE-->
-<!-- para que no tenga  algo que lo llene automatico, INVESTIGAR DE ESTO-->
- <!-- que es el crsf csrf_token-->
-    <br>
-    <br> <label for = "id_libro" name= "libro"> Libro: </label>
-    <select id= "id_libro" name="libro" required>  <br> <br> <!-- en name se usa -->             
-        <option value="">-- Seleccione un Libro </option> <!--EXPLICAR ESTO DE LOPTION TAMBIEN--> <!-- creo que es como que da una opcion inicial, para que le deinsturciones al usuario-->
-        {% for libro in libros%} <!--RECORREMOS TODOS LOS AUTORES PARA QUE LOS PONGA EN EL OPTION-->
-            <option value="{{ libro.id }}">
-            {{libro.titulo}} 
-        </option>
-        {% endfor %}
-    </select> <br>
-    
+<div class="container mt-n5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            
+            <div class="card dashboard-card shadow-lg border-0">
+                <div class="card-body p-5">
+                    
+                    <div class="d-flex align-items-center mb-4 border-bottom pb-3">
+                        <div class="icon-box me-3 mb-0" style="font-size: 2rem;">
+                            <i class="fas fa-hand-holding"></i> </div>
+                        <div>
+                            <h2 class="fw-bold m-0" style="color: var(--primary-purple);">Nuevo Préstamo</h2>
+                            <p class="text-muted small m-0">Asignar libro a un usuario</p>
+                        </div>
+                    </div>
 
+                    <form method="POST"> 
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <label for="id_libro" class="form-label fw-bold" style="color: var(--secondary-purple);">
+                                Libro a prestar
+                            </label>
+                            <select id="id_libro" name="libro" class="form-select rounded-pill" required>
+                                <option value="" selected disabled>-- Seleccione un libro disponible --</option>
+                                {% for libro in libros %}
+                                    <option value="{{ libro.id }}">
+                                        {{ libro.titulo }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-    <br><label for = "id_usuario" name= "usuario"> Usuario: </label> <!-- en el for hay que poner id uy luego el nombre si o si?????????--> 
-    <!--INVESTIGAR TODO ESTO-->
-    <!-- AHORA CREAMOS UN SELECTION QUE ES PARA QUE SAQUE UNA LSITA CON TODOS NUESTROS (este codigo es reciclado)AUTORES-->
-    <select id= "id_usuario" name="usuario" required>                
-        <option value="">-- Seleccione un Usuario </option> <!--EXPLICAR ESTO DE LOPTION TAMBIEN--> <!-- creo que es como que da una opcion inicial, para que le deinsturciones al usuario-->
-        {% for usuario in usuarios%} <!--RECORREMOS TODOS LOS AUTORES PARA QUE LOS PONGA EN EL OPTION-->
-                                <!-- EL valor del IN debe ser el que esta definido en COMILLAS-->
-            <option value="{{ usuario.id }}">{{usuario.username}}</option> <!-- pq username? cdonde veo eso o se que variables hay-->
-        {% endfor %}
-    </select></br>
+                        <div class="mb-4">
+                            <label for="id_usuario" class="form-label fw-bold" style="color: var(--secondary-purple);">
+                                Usuario solicitante
+                            </label>
+                            <select id="id_usuario" name="usuario" class="form-select rounded-pill" required>
+                                <option value="" selected disabled>-- Seleccione un usuario --</option>
+                                {% for usuario in usuarios %}
+                                    <option value="{{ usuario.id }}">
+                                        {{ usuario.username }} (ID: {{ usuario.id }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <div class="form-text">El usuario debe estar registrado en el sistema.</div>
+                        </div>
 
-    <br><label for = "id_fecha_prestamo" name= "fecha_prestamos"> Fecha: </label>
-    <input type ="date" id="id_fecha_prestamo" name = "fecha_prestamos" value="{{fecha}}"required></br> 
-    <!-- CON EL VALUE fecha hacemos que por defecto se ponga la fecha de hoy-->
-    <!-- POR QUE ACA ES INOUT Y NO SELECT?? pOR QUE MNO PASSA NADA AUNQUE NO LO--> 
-    <!-- COMO USAR EL TYPE-->
-    <!-- traemos la fecha que sacamos en el view -->
-    
+                        <div class="mb-4">
+                            <label for="id_fecha_prestamo" class="form-label fw-bold" style="color: var(--secondary-purple);">
+                                Fecha de inicio
+                            </label>
+                            <input type="date" id="id_fecha_prestamo" name="fecha_prestamos" 
+                                   class="form-control rounded-pill text-center" 
+                                   value="{{ fecha }}" required>
+                        </div>
 
-    <button type="submit" class = "btn btn-custom mt-2">Guardar</button>  <!--EL BOTON PARA GUARDAR EXPLICARRRRRRRRRRRRRRRRRRRRRRRRR-->
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-custom btn-lg shadow">
+                                <i class="fas fa-check me-2"></i> Confirmar Préstamo
+                            </button>
+                            <a href="{% url 'lista_prestamos' %}" class="btn btn-outline-secondary btn-sm rounded-pill mt-2">
+                                Cancelar
+                            </a>
+                        </div>
 
-</form> 
+                    </form> 
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Estilos para inputs y selects */
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-purple);
+        box-shadow: 0 0 0 0.25rem rgba(74, 20, 140, 0.1);
+    }
+    /* Hace que el input de fecha se vea más centrado y prolijo */
+    input[type="date"] {
+        color: var(--primary-purple);
+        font-weight: 500;
+    }
+    .mt-n5 { margin-top: -60px; }
+</style>
+
 {% endblock %}

@@ -71,3 +71,26 @@ class PrestamoUsuarioViewTest(TestCase):
         #self.assertEqual(resp.status_code, 200) #el def lo definimos antes aca la respuesta es como tal un true o false, explicar eso, como asi que es un true o false
         resp1=self.client.get(reverse('crear_autor'))     
         self.assertEqual(resp1.status_code, 200)
+#
+class ModelosTest(TestCase):
+    def setUp(self):
+        # Creamos un autor de prueba
+        self.autor = Autor.objects.create(
+            nombre="Gabriel", 
+            apellido="García Márquez", 
+            bibliografia="Premio Nobel"
+        )
+
+    def test_creacion_libro(self):
+        # Probamos que el libro se guarde bien con su relación
+        libro = Libro.objects.create(
+            titulo="Cien años de soledad",
+            autor=self.autor,
+            disponible=True
+        )
+        self.assertEqual(libro.titulo, "Cien años de soledad")
+        self.assertEqual(libro.autor.apellido, "García Márquez")
+
+    def test_str_modelos(self):
+        # Probamos que el __str__ funcione (lo que hablamos antes)
+        self.assertEqual(str(self.autor), "Gabriel García Márquez")

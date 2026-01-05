@@ -1,89 +1,96 @@
 {% extends "index.html" %}
 
 {% block contenido %}
+<div class="container mt-n5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card dashboard-card shadow-sm border-0">
+                <div class="card-body p-4">
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="fw-bold" style="color: var(--primary-purple);">
+                            <i class="fas fa-pen-nib me-2"></i>Autores Registrados
+                        </h2>
+                        <a href="{% url 'crear_autor' %}" class="btn btn-custom">
+                            <i class="fas fa-plus me-1"></i> Añadir Autor
+                        </a>
+                    </div>
 
-    <style>
-        /* Estilos para la tabla Morada Elegante */
-        .tabla-container {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 25px auto;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-            border-radius: 10px;
-            overflow: hidden; /* Para que los bordes redondeados se noten */
-            max-width: 90%;
-        }
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead style="background-color: #f8f9fa;">
+                                <tr>
+                                    <th class="text-center" style="color: var(--primary-purple);">Foto</th>
+                                    <th style="color: var(--primary-purple);">Nombre Completo</th>
+                                    <th style="color: var(--primary-purple);">Bibliografía</th>
+                                    <th class="text-center" style="color: var(--primary-purple);">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for autor in autores %}
+                                <tr>
+                                    <td class="text-center">
+                                        {% if autor.imagen %}
+                                            <img src="{{ autor.imagen.url }}" alt="Foto de {{ autor.nombre }}" 
+                                                 class="rounded-circle shadow-sm" 
+                                                 style="width: 50px; height: 50px; object-fit: cover; border: 2px solid var(--light-accent);">
+                                        {% else %}
+                                            <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm" 
+                                                 style="width: 50px; height: 50px; border: 2px solid #eee;">
+                                                <i class="fas fa-user text-muted"></i>
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="fw-bold">{{ autor.nombre }} {{ autor.apellido }}</div>
+                                        <small class="text-muted">ID: #{{ autor.id }}</small>
+                                    </td>
+                                    <td>
+                                        <p class="mb-0 text-secondary" style="font-size: 0.9rem;">
+                                            {{ autor.bibliografia|truncatechars:80 }}
+                                        </p>
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="{% url 'editar_autores' autor.id %}" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                            <i class="fas fa-edit me-1"></i> Editar
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center py-5">
+                                        <i class="fas fa-info-circle fa-2x mb-3 text-muted"></i>
+                                        <p class="text-muted">No hay autores registrados en la base de datos.</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
 
-        .tabla-morada {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 400px;
-            background-color: #ffffff;
-        }
-
-        .tabla-morada thead tr {
-            background-color: #6a1b9a; /* Morado intenso */
-            color: #ffffff;
-            text-align: left;
-            font-weight: bold;
-        }
-
-        .tabla-morada th,
-        .tabla-morada td {
-            padding: 12px 15px;
-        }
-
-        .tabla-morada tbody tr {
-            border-bottom: 1px solid #dddddd;
-        }
-
-        .tabla-morada tbody tr:nth-of-type(even) {
-            background-color: #f3e5f5; /* Morado muy clarito para intercalar */
-        }
-
-        .tabla-morada tbody tr:last-of-type {
-            border-bottom: 2px solid #6a1b9a;
-        }
-
-        .tabla-morada tbody tr:hover {
-            background-color: #e1bee7; /* Color al pasar el mouse */
-            color: #4a148c;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        h2 {
-            color: #4a148c;
-            text-align: center;
-            font-family: 'Segoe UI', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-    </style>
-
-    <h2>Autores Registrados</h2>
-
-    <div class="tabla-container">
-        <table class="tabla-morada">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Bibliografía</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for autor in autores %}
-                <tr>
-                    <td>{{ autor.nombre }}</td>
-                    <td>{{ autor.apellido }}</td>
-                    <td>{{ autor.bibliografia }}</td>
-                </tr>
-                    <td> <!--va a enviar un autor id, es decir el parametro que pide de int id-->
-                        <a href="{% url 'editar_autores' autor.id %}">Editar</a>
-                    </td>
-                {% endfor %}
-            </tbody>
-        </table>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
+<style>
+    /* Ajuste para que la tarjeta suba un poco sobre el hero section */
+    .mt-n5 {
+        margin-top: -30px;
+    }
+    
+    .table thead th {
+        border-top: none;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+    }
+
+    /* Efecto hover suave en las filas */
+    .table-hover tbody tr:hover {
+        background-color: rgba(74, 20, 140, 0.02);
+    }
+</style>
 {% endblock %}

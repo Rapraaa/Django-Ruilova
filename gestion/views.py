@@ -13,7 +13,8 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin #clae 11-12-25
 from django.urls import reverse_lazy #clae 11-12-25
 
-
+#NECESARIO PARA LA API
+import requests #permite a python navegar
 
 # Create your views here.
 
@@ -33,6 +34,7 @@ def lista_libros(request):
     libros = Libro.objects.all() 
     return render(request, 'gestion/templates/libros.html', {'libros' : libros} ) 
 
+""" el crear libro antiguo
 def crear_libro(request): #hay que sacar los autores pq los necestiamos para que??
     autores = Autor.objects.all() #select * from autor
     #necesitamos los autores auqnue sea libros para poder hacer las opcioens de los autores con las que ya tenemos
@@ -51,7 +53,7 @@ def crear_libro(request): #hay que sacar los autores pq los necestiamos para que
 #aca en el ultimo return me dio un error por no poner bien la identacion, y los parentesis, OJO
 ####################################3
 
-
+"""
 
 def lista_autores(request):
     autores = Autor.objects.all() #SELECT * FROM AUTORES #HAY QUE IMPORTAR EL AUTOR DEL MODELS PARA QUE LO RECONOZCA
@@ -80,6 +82,7 @@ def crear_autor(request, id=None): #le pedimos el id pero puede ser none? #EXPLI
             autor.nombre = nombre #EXPLICAR ESO
             autor.apellido = apellido
             autor.bibliografia = bibliografia
+            autor.imagen = imagen
             autor.save()  #EXPLICAR POR QUE LA A DEBE SER MINUSCULA
         #nombre de autor es nombre de aca, autor de autor es auator de aca y asi
             return redirect('lista_autores') #PARA QUE SIRVE ESTE RREDIRECT???
@@ -243,3 +246,179 @@ class DeleteUpdateView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     permission_required = 'gestion.delete_libro'
 
 #ACA ACABA LA DE LIBRO
+
+#CREAR LIBRO NUEVO PARA QUE SIRVA CON APIS
+@login_required 
+def crear_libro(request):
+    datos_iniciales = {} #creamos le diccionario vacio donde guardaremos todo, luego esto mandamos al html
+    mensaje_api = None #creamos la variable para que no de error luego, esto se llenara si la api manda algo
+
+    if 'busqueda' in request.GET: #con esta condicion vemos si el usuario solo esta viendo la pagina o si esta intentando buscar algo 
+        #revisa si hay busqueda en la url, ese busqueda seria lo que escribamos
+        #http://bibliotecaimperial.com/libros/nuevo/?busqueda=juancho
+        #el request get captura todo lo que este despues del ?, que quedaria como una variable para python
+        query = request.GET.get('busqueda').strip()
+        #guarda en a variable consulta lo que hay despues del busqueda, el strip es por si hay espacios puestos de mas
+        #para que no guarde todo el diccionario con .get sacamos solo el valor asociado
+        
+        #detectamos is lo que puso es un ISBN, para esto revisamos que el query sea un digito y que tenga entre 9 a 13 numeros
+        es_isbn = query.isdigit() and len(query) >= 9 and len(query) <= 13 #regresa true o false
+        
+        titulo_encontrado = "" #creamos la variable, pero le decimos uqe sea tipo string, si encuentra el titulo metemos aca
+        autor_nombre_encontrado = "Desconocido" #aca lo mismo, pero en vez de que pro defecto este vacio ponemos desconocido, si no encuentra autor
+        #dira desconocido pro defecto
+        exito = False  #una variable booleana para saber si la consulta tuvo exito, por defecto false
+
+        if es_isbn: #si es que el es isbn es true hace esto
+            url = f'https://openlibrary.org/api/books?bibkeys=ISBN:{query}&jscmd=details&format=json' 
+            #la url por defecto para ISBN es https://openlibrary.org/api/books  ? despues del signo de pregunta va la consulta, el get que le mandaremos 
+            #al open library,
+            #bibkeys es un parametro opcional que pues contiene como lso tipso de ids que sirven para open library
+            #hay isbn, oclc, lccn, y mas, usamos isbn nosotros asi que ponemos bibkeys=ISBN:
+            #y lo demas de los puntos lo llenamos con la consulta, que seria lo que puso el usuario ya que eso ya sacamos antes, ej, 12312371281 
+            #despues ponemos el & lo cual es un SEPARADOR, es como poner una , para que ademas de esa busqueda haga
+            #jscmd=details, esto hace que nos de mas detalles, osea la version avanzada, sino nso da informacion muy basica
+            #es igual al bibkeys, es un parametro opcional, hay viewapi , data y details, el details si nos da lo que queremos
+            #por ultimo en el parametro format ponemos en que formato nos responda
+            #le ponemos json que es lo que vamos a usar y lo que se usa casi siempre pq lo leen casi todos, es parecido a un diccionario, tambien hay javascript pero 
+            #usen json y ya
+
+            response = requests.get(url) #en la variable response guarda lo que nos responda la url que creamos antes al hacerle un metodo get
+            if response.status_code == 200: #si es que el codigo es 200, que significa OK, osea todo bacan, si diera 404 es que no encontro
+                data = response.json() #guarda en la variable data todo lo de la respuesta pero traducido a un diccioanrio, osea lo pasa de json a python
+                key = f"ISBN:{query}" #la API esta tonta, mete la respuesta como si fuera el valor de ISBN, osea mete el diccionario que pedimos dentro de otro
+                #diccionario, la clabe seria ISBN:10283021838 por ejemplo, y el valor lo qeu dijimos, esto lo ahce por si quieres buscar varios libros al a vez
+                #osea se complican por las huevas, entonces guardamos en la variable key pues la clave a la que tenemos que acceder
+                if key in data: #si es que en el diccionario esta la clave que metimos en key
+                    info = data[key]['details'] #ahora como esta api como que le gusta meter diccionarios en diccionarios
+                    #al igual que mete lo que pedimos como un valor del isbn, mete los details que s lo que queremos como un valor de valga la rebudancia 'details'
+                    #asi que guardamos en info los datos de data que hayan en nuestro isbn, en details, es como si fueran carpetas
+                    titulo_encontrado = info.get('title', 'sin titulo') #metemos en la variable titulo encontrado el valor asociado a titulo buscandolo con get, 
+                    #si no hay pone 'sin titulo'
+                    if 'authors' in info: #si es que en info hay la clave 'authors'
+                        autor_nombre_encontrado = info['authors'][0]['name'] #va a meter en la variabvle autor nombre encontrado
+                        #el primer autor, con el 0 buscamos la posicion 1, pq puede tener varios y va a sacar el name, pq hay mas datos, ya ven es como carpetas
+                    exito = True #y pone el booleano de exito como true, ya que si  habia datos para nuestro isbn
+        
+        else: #si es que NO ES ISBN buscaremos por titulo
+            url = f'https://openlibrary.org/search.json?q={query}&limit=1'
+            #aca la cosa cambia un poco, el link ahora es  f'https://openlibrary.org/search.json
+            #el parametro q es query,  osea la consulta, le damos el valor pues de nuestra busqueda
+            #$ y que me de solo el primer resultado, pq puede dar varios
+            #ACA si quisierda que me de unos 5 y que pueda elegir entre los 5 pues pondria limit 5
+            #y en el html un for para cada uno de esos, no quice hacerlo asi por tiempo y facilidad, pero es posible
+            response = requests.get(url) #aca se repite todo, lo mismo es
+            if response.status_code == 200:
+                data = response.json()
+                if data.get('docs'):
+                    libro = data['docs'][0] # Tomamos el primer resultado
+                    titulo_encontrado = libro.get('title', '')
+                    if 'author_name' in libro: #lo mismo epro en vez de authors manda author_name pq le pusieron otro nombre, asi de sapos son
+                        autor_nombre_encontrado = libro['author_name'][0]
+                    exito = True
+
+        if exito: #so es que hubo exito, osea si encontramos algo
+            partes = autor_nombre_encontrado.split(' ') #separamos el nombre y apellido, la funcion split separa las palabras en una lista separada asi por comas
+            #tipo hola,caca,popo, en las comillas hay que poner cual es el separador, en este caso los espacios, osea el separador
+            if len(partes) > 1: #si es que hay mas de 1 objeto, osea partes
+                apellido = partes[-1] #-1 es el ultimo valor, hacemos que apellido sea el ultimo valor
+                nombre = " ".join(partes[:-1]) #y que nombre sea todos los valores menos el ultimo, y los unimos con join y que entre cada uno haya un espacio
+            else:
+                nombre = partes[0] #si solo es un nombre
+                apellido = "Desconocido" #el apellido le ponemos desconocido por defecto
+            
+            autor_obj, creado = Autor.objects.get_or_create( #el get or create es una funcion de django bien bacana
+                #lo que hace es buscar algo, y si no lo encuentra lo crea, quien lo diria, pide  2 variables, en la que se mete todo el get
+                #y la segunda es un booleano que avisa si lo tuvo que crear o ne
+                #les explico como usarla, todo lo que no sea defaults son los criterios de busqueda
+                #en idioma sql serian los where, busca que tenga ese nombre y apellido
+                #el defaults es lo que usara django si no encuentra, ya que va a crearlo el mismo pero necesita algo que 
+                #poner de bibliografia o no le dejara, ahi pondra eso
+                #usa 2 variables pq en la primera guarda el autor, osea loque acaba de encontrar o de crear
+                #en la segunda te avisa si lo encontro o creo
+                #fasilisimo verdad?
+                nombre=nombre,
+                apellido=apellido,
+                defaults={'bibliografia': 'Creado autom. por Python (OpenLibrary)'}
+            )
+
+            # estos son los datos para que el formulario este completito solo
+            datos_iniciales = {
+                'titulo': titulo_encontrado, #en el titulo pone el que encontramos
+                'autor_id': autor_obj.id #nos da el id del autor, para saber cual de todos elegir
+            }
+            
+            if creado: #si es que lo creamos va a avisar que lo creo, lo guardamos en la variable mensaje api que luego mandamos al html
+                mensaje_api = f"¡Encontrado: '{titulo_encontrado}'! Autor '{autor_nombre_encontrado}' creado automáticamente."
+            else:#si no lo creo, avisa que ya habia y solo lo eligio
+                mensaje_api = f"¡Encontrado: '{titulo_encontrado}'! Autor existente seleccionado."
+        else: #si no avisa que no encontro ningun resultado
+            mensaje_api = "No se encontraron resultados en Open Library."
+
+
+    #ya aca es toda la logica que ya sabemos para guardar las cosas
+    if request.method == 'POST':
+
+        titulo = request.POST.get('titulo')
+        autor_id = request.POST.get('autor_id')
+        autor = Autor.objects.get(id=autor_id) #si quiere hacer post, osea crear saca todo lo que metio ahi,  los datos del id que eligio
+        Libro.objects.create(titulo=titulo, autor=autor, disponible=True) #el libro
+        return redirect('lista_libros')
+
+    autores = Autor.objects.all() #si es que es metodo get, osea solo tamos viendo, si o si se va a cargar esto
+    return render(request, 'crear_libros.html', { #le mandamos el formulario, 
+        'autores': autores,
+        'datos_iniciales': datos_iniciales,
+        'mensaje_api': mensaje_api
+    })
+
+
+#NUEVO devolver_prestamo
+@login_required
+def devolver_libro(request, prestamo_id):
+    prestamo = get_object_or_404(Prestamo, id=prestamo_id)
+    
+
+    if prestamo.fecha_devolucion:
+        return redirect('lista_prestamos')
+
+
+    prestamo.fecha_devolucion = timezone.now().date()
+    prestamo.save()
+
+  #liberamos libro
+    libro = prestamo.libro
+    libro.disponible = True
+    libro.save()
+
+
+    if prestamo.dias_retraso > 0:
+        multa.objects.get_or_create(
+            prestamo=prestamo,
+            tipo='r',
+            defaults={'monto': 0} # El modelo calculará el monto real
+        )
+        #LUEGO QUIERO HACER QUE AVISE SI TUOV UQE PAGAR MULTA O NO CON EL HTML
+    
+    return redirect('lista_prestamos')
+
+#PARA QUE EN EL HTML DIGA ATRASADO AL ESTARLO USAMOS
+"""
+{% if prestamo.fecha_devolucion %}
+    <span class="badge bg-success">Devuelto</span>
+
+{% elif prestamo.dias_retraso > 0 %}
+    <span class="badge bg-danger">Atrasado</span>
+
+{% else %}
+    <span class="badge bg-warning text-dark">En Curso</span>
+
+{% endif %}
+"""
+
+@login_required
+def pagar_multa(request, multa_id): #para pagar la multa
+    multa_obj = get_object_or_404(multa, id=multa_id)
+    multa_obj.pagado = True
+    multa_obj.save() #al hacer save se calcularia el monto tambien
+    return redirect('lista_multa')

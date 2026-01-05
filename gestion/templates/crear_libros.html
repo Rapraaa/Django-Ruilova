@@ -1,30 +1,98 @@
 {% extends "index.html" %} 
-<!--SELECCION DE AUTORES-->
+
 {% block contenido %}
-<h2> Crear Libros </h2>
 
-<form method = "POST">  <!-- INVESTIGAR TODO ESTE CODIGO Y ENTENDER LA LOGICA-->
-    {% csrf_token%} <!-- crea unas cookies de sesion apra saber que el que la hace es uno y no un bot o asi, EXPLICAER MAS A DETALLE-->
-<!-- para que no tenga  algo que lo llene automatico, INVESTIGAR DE ESTO-->
-    <label for = "id_titulo" name= "titulo" class=> Titulo: </label>
-    <input placeholder = "Titulo. Ej El principito" type = "text" id = "id_titulo" name="titulo" required> </label> <br> <br>
+<div class="container mt-n5">
+    <div class="row justify-content-center">
+        <div class="col-md-7"> <div class="card dashboard-card shadow-lg border-0">
+                <div class="card-body p-5">
+                    
+                    <div class="d-flex align-items-center mb-4 border-bottom pb-3">
+                        <div class="icon-box me-3 mb-0" style="font-size: 2rem;">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <h2 class="fw-bold m-0" style="color: var(--primary-purple);">Registrar Libro</h2>
+                    </div>
 
-    <label for = "id_autor" name= "autor_id"> Autor: </label> <!-- en el for hay que poner id uy luego el nombre si o si?????????--> 
-    <!--INVESTIGAR TODO ESTO-->
-    <!-- AHORA CREAMOS UN SELECTION QUE ES PARA QUE SAQUE UNA LSITA CON TODOS NUESTROS AUTORES-->
-    <select id= "id_autor" name="autor_id" required>                
-        <option value="">Seleccione un autor </option> <!--EXPLICAR ESTO DE LOPTION TAMBIEN--> <!-- creo que es como que da una opcion inicial, para que le deinsturciones al usuario-->
-        {% for autor in autores%} <!--RECORREMOS TODOS LOS AUTORES PARA QUE LOS PONGA EN EL OPTION-->
-        <option value="{{ autor.id }}">
-            {{autor.nombre}} - {{autor.apellido}}
-        </option>
-        {% endfor %}
-    </select>
+                    <form method="GET" class="mb-4 p-3 bg-light rounded border">
+                        <label class="fw-bold small mb-2" style="color: var(--primary-purple);">
+                            <i class="fas fa-magic me-1"></i> Autocompletar (OpenLibrary)
+                        </label>
+                        <div class="input-group">
+                            <input type="text" name="busqueda" class="form-control" 
+                                   placeholder="ISBN o Título (Ej: El Principito)">
+                            <button class="btn btn-secondary" type="submit">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                        </div>
+                        
+                        {% if mensaje_api %}
+                            <div class="alert alert-success mt-2 py-2 small">
+                                <i class="fas fa-check-circle"></i> {{ mensaje_api }}
+                            </div>
+                        {% endif %}
+                    </form>
+                    <form method="POST"> 
+                        {% csrf_token %} 
+                        
+                        <div class="mb-4">
+                            <label for="id_titulo" class="form-label fw-bold" style="color: var(--secondary-purple);">
+                                Título del Libro
+                            </label>
+                            
+                            <input type="text" id="id_titulo" name="titulo" 
+                                   class="form-control rounded-pill" 
+                                   placeholder="Ej. El Principito" 
+                                   value="{{ datos_iniciales.titulo|default:'' }}" required>
+                        </div>
 
-    <li> <!-- para que vaya a la linea de abajo-->
-    <button type="submit" class="btn btn-custom mt-2" >Guardar</button>  <!--EL BOTON PARA GUARDAR EXPLICARRRRRRRRRRRRRRRRRRRRRRRRR-->
+                        <div class="mb-4">
+                            <label for="id_autor" class="form-label fw-bold" style="color: var(--secondary-purple);">
+                                Autor
+                            </label>
+                            <select id="id_autor" name="autor_id" class="form-select rounded-pill" required>
+                                <option value="" disabled {% if not datos_iniciales.autor_id %}selected{% endif %}>
+                                    -- Seleccione un autor --
+                                </option>
+                                
+                                {% for autor in autores %}
+                                    <option value="{{ autor.id }}" 
+                                        {% if datos_iniciales.autor_id == autor.id %}selected{% endif %}>
+                                        {{ autor.nombre }} {{ autor.apellido }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            
+                            <div class="form-text mt-2">
+                                ¿No encuentras al autor? <a href="{% url 'crear_autor' %}" style="color: var(--primary-purple);">Créalo aquí primero</a>.
+                            </div>
+                        </div>
 
-</form> 
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-custom btn-lg shadow">
+                                <i class="fas fa-save me-2"></i> Guardar Libro
+                            </button>
+                            <a href="{% url 'lista_libros' %}" class="btn btn-outline-secondary btn-sm rounded-pill mt-2">
+                                Cancelar
+                            </a>
+                        </div>
+
+                    </form> 
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-purple);
+        box-shadow: 0 0 0 0.25rem rgba(74, 20, 140, 0.1);
+    }
+    .mt-n5 { margin-top: -60px; }
+</style>
+
 {% endblock %}
 
 <!-- EL NAME es el nombre con el que el dato va hacia python, osea el que usaria el views, 

@@ -25,7 +25,7 @@ TITLE = "UTE 2 semestre" #aca ponemos el titulo de la pagina web apra que este d
 SECRET_KEY = 'django-insecure-h)ry2e)7-ppto-^tf__n(y@5&02@q#xg!na_yha$3_#0vuzwbo'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False #lo desactivamos ya 
+DEBUG = True#lo desactivamos ya 
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'bibliotecaimperial.com', 'www.bibliotecaimperial.com' ]
 

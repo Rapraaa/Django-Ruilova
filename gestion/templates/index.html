@@ -20,65 +20,88 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f4f6f9; /* Fondo gris muy suave para la página */
+            background-color: #f4f6f9;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* === ESTILOS DEL MENÚ SUPERIOR (NAVBAR) === */
+        /* === NAVBAR === */
         .navbar-custom {
             background: linear-gradient(90deg, var(--primary-purple), var(--secondary-purple));
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
         
-        .nav-link:hover {
-            color: #fff !important; /* Texto blanco al pasar el mouse */
-            text-shadow: 0 0 10px rgba(255,255,255,0.5); /* Brillo suave */
+        .nav-link {
+            transition: color 0.3s ease;
         }
 
-        /* === ESTILOS DEL ENCABEZADO GIGANTE (HERO) === */
+        .nav-link:hover {
+            color: #fff !important;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        /* Botón de Logout disfrazado de Link */
+        .btn-logout {
+            background: none;
+            border: none;
+            padding: 0;
+            color: rgba(255,255,255,0.55);
+            text-decoration: none;
+            padding: var(--bs-nav-link-padding-y) var(--bs-nav-link-padding-x);
+        }
+        .btn-logout:hover {
+            color: #fff;
+        }
+
+        /* === HERO SECTION === */
         .hero-section {
             background: var(--dark-bg);
             color: white;
             padding: 80px 0;
-            border-bottom-right-radius: 50px; /* Borde redondeado abajo derecha */
-            border-bottom-left-radius: 50px;  /* Borde redondeado abajo izquierda */
+            border-bottom-right-radius: 50px;
+            border-bottom-left-radius: 50px;
             margin-bottom: 50px;
         }
 
-        /* === ESTILOS DE LAS TARJETAS (CARDS) === */
+        /* === CARDS & BUTTONS === */
         .dashboard-card {
             border: none;
             border-radius: 15px;
             background: white;
-            transition: all 0.4s ease; /* Suaviza la animación */
-            box-shadow: 0 10px 20px rgba(74, 20, 140, 0.1); /* Sombra morada suave */
+            transition: all 0.4s ease;
+            box-shadow: 0 10px 20px rgba(74, 20, 140, 0.1);
             height: 100%;
         }
 
-        /* Animación: Al pasar el mouse, la tarjeta sube */
         .dashboard-card:hover {
             transform: translateY(-10px); 
             box-shadow: 0 15px 30px rgba(74, 20, 140, 0.25);
         }
 
-        /* Estilo de los iconos dentro de las tarjetas */
         .dashboard-card .icon-box {
-            font-size: 2.5rem; /* Tamaño del icono */
+            font-size: 2.5rem;
             color: var(--primary-purple);
             margin-bottom: 15px;
         }
 
-        /* Botón morado de las tarjetas */
         .btn-custom {
             background-color: var(--primary-purple);
             color: white;
             border-radius: 30px;
             padding: 8px 25px;
             border: none;
+            transition: background-color 0.3s;
         }
         
         .btn-custom:hover {
             background-color: var(--secondary-purple);
             color: white;
+        }
+
+        /* Footer al fondo */
+        footer {
+            margin-top: auto;
         }
     </style>
     
@@ -87,7 +110,7 @@
 
     <nav class="navbar navbar-expand-lg navbar-custom navbar-dark sticky-top">
         <div class="container">
-            <a href ="{% url 'index' %}" class="navbar-brand fw-bold" href="#">
+            <a class="navbar-brand fw-bold" href="{% url 'index' %}">
                 <i class="fas fa-book-reader me-2"></i> BIBLIO<span style="color: var(--light-accent);">TECH</span>
             </a>
             
@@ -96,33 +119,31 @@
             </button>
 
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link active" href="{% url 'index' %}">Inicio</a></li> <!-- ESTOS SON LOS BOTONES-->
-                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_libros'%}">Libros</a></li> <!---->
-                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_autores' %}">Autores</a></li> <!--EL HREF ES EL QUE HACD LA DIFERENCIA O EL LINK, LA ALMOHADILLA ES EL LINK-->
-                    <!-- si hay comillas dobles en href el otro debe tener simples -->
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item"><a class="nav-link active" href="{% url 'index' %}">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_libros'%}">Libros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_autores' %}">Autores</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'lista_prestamos'%}">Préstamos</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'lista_multa' %}">Multas</a></li>
-                    <!-- VOTON DE CERRAR SESION-->
 
-                    {% if user.is_authenticated %} <!-- si el usuari oesta logeado sale elboton sino no-->
-                    <li class= "nav-item">
-                    <form method='POST' action="{% url 'logout' %}">
-                        {% csrf_token %}<!-- POR QUE ESTO NECESITA UN FORM??????????????????-->
-                     <!-- necesita un form pq estamos haciendo un formulario con el metodo post para enviarlo-->
-                        <!-- form post se usa Cuando vas a cambiar algo en la base de datos o realizar una acción de seguridad 
-                         (Guardar datos, Borrar producto, Cerrar sesión)
-                         Cerrar sesión es una acción destructiva: estás borrando la sesión del usuario en el servidor. Por eso, por estándar, debe ser POST-->
-                        <button type="submit" class="nav-link">Cerrar sesión</button></li>
-                    </form>
-                    </li>
-                    {% endif %}
-                    <button type="submit" class="nav-link">{{ user.username }}</button></li>
-                    {% if not user.is_authenticated %} <!-- BOTON PARA INGRESAR-->
-                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Ingresar</a></li>
-                    {% endif %}
-                    {% if not user.is_authenticated %} <!-- BOTON PARA INGRESAR-->
-                    <li class="nav-item"><a class="nav-link" href="{% url 'registro' %}">Registrarse</a></li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item ms-lg-3">
+                            <span class="nav-link text-white fw-bold border border-light rounded-pill px-3 py-1">
+                                <i class="fas fa-user-circle me-1"></i> {{ user.username }}
+                            </span>
+                        </li>
+                        
+                        <li class="nav-item ms-lg-2">
+                            <form method="POST" action="{% url 'logout' %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="nav-link btn-logout">
+                                    <i class="fas fa-sign-out-alt"></i> Salir
+                                </button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li class="nav-item ms-lg-3"><a class="nav-link" href="{% url 'login' %}">Ingresar</a></li>
+                        <li class="nav-item"><a class="btn btn-light text-primary btn-sm rounded-pill px-3 ms-2 fw-bold" href="{% url 'registro' %}">Registrarse</a></li>
                     {% endif %}
                 </ul>
             </div>
@@ -133,19 +154,16 @@
         <div class="container">
             <h1 class="display-4 fw-bold">Gestión Bibliotecaria</h1>
             <p class="lead mb-4" style="color: var(--light-accent);">Administra el conocimiento con elegancia.</p>
-            <a href ="{% url 'crear_prestamo' %}" class="btn btn-light text-primary fw-bold rounded-pill px-5 py-2 shadow">
+            <a href="{% url 'crear_prestamo' %}" class="btn btn-light text-primary fw-bold rounded-pill px-5 py-2 shadow transition-hover">
                 <i class="fas fa-plus me-2"></i>Nuevo Préstamo
             </a>
         </div>
     </header>
 
+    {% block contenido %}  
+    {% endblock %}
 
-{% block contenido %}  
-{% endblock %}
-
-        </div>
-
-    </div> <footer class="text-center py-4 mt-5" style="background-color: var(--dark-bg); color: #888;">
+    <footer class="text-center py-4 mt-5" style="background-color: var(--dark-bg); color: #888;">
         <div class="container">
             <p class="mb-0">&copy; 2025 Biblioteca Bacana.</p>
         </div>

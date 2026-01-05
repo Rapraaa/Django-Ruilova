@@ -85,13 +85,15 @@ class Prestamo(models.Model):
     #calcular retraso
     @property
     def dias_retraso(self):
-        hoy = timezone.now().date() #el timezone now nos va a dar la fecha con zona horaria y todo, y el .date la fecha nomas
+     #el timezone now nos va a dar la fecha con zona horaria y todo, y el .date la fecha nomas
         #POR QUE USAMOS LOS 2?????????????????????????????????
-        fecha_ref = hoy#pondra de fecha de referencia la fecha de devolucion o la de hoy, segun cual exista, si hay la devolucion
+        #pondra de fecha de referencia la fecha de devolucion o la de hoy, segun cual exista, si hay la devolucion
         #no usara la de hoy, si no hay usara hoy pq va en ordeen
-        if fecha_ref > self.fecha_maxima: #si la fecha de referencia es mayor a la maxima
-            return (fecha_ref - self.fecha_maxima).days #va a devolver los dias extras que se ha pasado con respeto a la fecha maxima
+        #para uqe no aumente si ya devolvio
+        final = self.fecha_devolucion if self.fecha_devolucion else timezone.now().date()
         #entender la logica,  pq se resta??
+        if final > self.fecha_maxima:
+            return (final - self.fecha_maxima).days
         else: #ME FALTABA EL ELSE, POR ESO SIEMPRE DABA 0 ASI SI TUVIERA CACA, O NO? ACASO SOLO PUEDE DAR UN RETURN?
             return 0 #ya teniamos el reeturn 0 de por si
 

@@ -2,89 +2,98 @@
 
 {% block contenido %}
 
-    <style>
-        /* Estilos para la tabla Morada Elegante */
-        .tabla-container {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 25px auto;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-            border-radius: 10px;
-            overflow: hidden; /* Para que los bordes redondeados se noten */
-            max-width: 90%;
-        }
+<div class="container mt-n5">
+    <div class="row">
+        <div class="col-md-12">
+            
+            <div class="card dashboard-card shadow-lg border-0">
+                <div class="card-body p-4">
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="fw-bold" style="color: var(--primary-purple);">
+                            <i class="fas fa-file-invoice-dollar me-2"></i>Control de Multas
+                        </h2>
+                        <a href="{% url 'crear_multa' %}" class="btn btn-custom shadow-sm">
+                            <i class="fas fa-plus me-1"></i> Nueva Sanción
+                        </a>
+                    </div>
 
-        .tabla-morada {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 400px;
-            background-color: #ffffff;
-        }
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead style="background-color: #f8f9fa;">
+                                <tr>
+                                    <th style="color: var(--primary-purple);">Préstamo Asociado</th>
+                                    <th style="color: var(--primary-purple);">Motivo</th>
+                                    <th style="color: var(--primary-purple);">Fecha</th>
+                                    <th class="text-end" style="color: var(--primary-purple);">Monto</th>
+                                    <th class="text-center" style="color: var(--primary-purple);">Estado</th>
+                                    <th class="text-center" style="color: var(--primary-purple);">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for multa in multas %}
+                                <tr>
+                                    <td class="fw-bold text-secondary">
+                                        {{ multa.prestamo }}
+                                    </td>
+                                    
+                                    <td>
+                                        <span class="text-capitalize">{{ multa.get_tipo_display }}</span>
+                                    </td>
 
-        .tabla-morada thead tr {
-            background-color: #6a1b9a; /* Morado intenso */
-            color: #ffffff;
-            text-align: left;
-            font-weight: bold;
-        }
+                                    <td class="text-muted small">
+                                        <i class="far fa-calendar-alt me-1"></i> {{ multa.fecha|date:"d M Y" }}
+                                    </td>
 
-        .tabla-morada th,
-        .tabla-morada td {
-            padding: 12px 15px;
-        }
+                                    <td class="text-end fw-bold text-dark">
+                                        $ {{ multa.monto }}
+                                    </td>
 
-        .tabla-morada tbody tr {
-            border-bottom: 1px solid #dddddd;
-        }
+                                    <td class="text-center">
+                                        {% if multa.pagado %}
+                                            <span class="badge bg-success rounded-pill px-3">
+                                                <i class="fas fa-check me-1"></i> Pagado
+                                            </span>
+                                        {% else %}
+                                            <span class="badge bg-warning text-dark rounded-pill px-3">
+                                                <i class="fas fa-clock me-1"></i> Pendiente
+                                            </span>
+                                        {% endif %}
+                                    </td>
 
-        .tabla-morada tbody tr:nth-of-type(even) {
-            background-color: #f3e5f5; /* Morado muy clarito para intercalar */
-        }
+                                    <td class="text-center">
+                                        {% if not multa.pagado %}
+                                            <a href="{% url 'pagar_multa' multa.id %}" class="btn btn-sm btn-outline-success rounded-pill px-3 shadow-sm">
+                                                <i class="fas fa-hand-holding-usd me-1"></i> Pagar
+                                            </a>
+                                        {% else %}
+                                            <i class="fas fa-check-double text-success" title="Completado"></i>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center py-5 text-muted">
+                                        <i class="fas fa-smile-beam fa-3x mb-3" style="color: var(--secondary-purple);"></i>
+                                        <p>¡Excelente! No hay multas registradas.</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
 
-        .tabla-morada tbody tr:last-of-type {
-            border-bottom: 2px solid #6a1b9a;
-        }
-
-        .tabla-morada tbody tr:hover {
-            background-color: #e1bee7; /* Color al pasar el mouse */
-            color: #4a148c;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        h2 {
-            color: #4a148c;
-            text-align: center;
-            font-family: 'Segoe UI', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-    </style>
-
-    <h2>Multas Registradas</h2>
-
-    <div class="tabla-container">
-        <table class="tabla-morada">
-            <thead>
-                <tr>
-                    <th>Prestamo</th>
-                    <th>Tipo</th>
-                    <th>Monto</th>
-                    <th>Pagado</th>
-                    <th>Fecha</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for multa in multas %}
-                <tr>
-                    <td>{{ multa.prestamo }}</td>
-                    <td>{{ multa.tipo }}</td>
-                    <td>{{ multa.monto }}</td>
-                    <td>{{ multa.pagado }}</td>
-                    <td>{{ multa.fecha }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+
+<style>
+    .mt-n5 { margin-top: -60px; }
+    .table-hover tbody tr:hover {
+        background-color: rgba(74, 20, 140, 0.03);
+    }
+</style>
 
 {% endblock %}

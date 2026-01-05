@@ -2,89 +2,103 @@
 
 {% block contenido %}
 
-    <style>
-        /* Estilos para la tabla Morada Elegante */
-        .tabla-container {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 25px auto;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-            border-radius: 10px;
-            overflow: hidden; /* Para que los bordes redondeados se noten */
-            max-width: 90%;
-        }
+<div class="container mt-n5">
+    <div class="row">
+        <div class="col-md-12">
+            
+            <div class="card dashboard-card shadow-lg border-0">
+                <div class="card-body p-4">
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="fw-bold" style="color: var(--primary-purple);">
+                            <i class="fas fa-hand-holding-heart me-2"></i>Historial de Préstamos
+                        </h2>
+                        <a href="{% url 'crear_prestamo' %}" class="btn btn-custom shadow-sm">
+                            <i class="fas fa-plus me-1"></i> Prestar Libro
+                        </a>
+                    </div>
 
-        .tabla-morada {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 400px;
-            background-color: #ffffff;
-        }
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead style="background-color: #f8f9fa;">
+                                <tr>
+                                    <th style="color: var(--primary-purple);">Libro Prestado</th>
+                                    <th style="color: var(--primary-purple);">Usuario</th>
+                                    <th style="color: var(--primary-purple);">Fecha Inicio</th>
+                                    <th style="color: var(--primary-purple);">Vencimiento</th>
+                                    <th class="text-center" style="color: var(--primary-purple);">Estado / Devolución</th>
+                                    <th class="text-center" style="color: var(--primary-purple);">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for prestamo in prestamos %}
+                                <tr>
+                                    <td class="fw-bold text-secondary">
+                                        <i class="fas fa-book me-1 small text-muted"></i> {{ prestamo.libro }}
+                                    </td>
+                                    
+                                    <td>
+                                        <i class="fas fa-user me-1 small text-muted"></i> {{ prestamo.usuario }}
+                                    </td>
 
-        .tabla-morada thead tr {
-            background-color: #6a1b9a; /* Morado intenso */
-            color: #ffffff;
-            text-align: left;
-            font-weight: bold;
-        }
+                                    <td>{{ prestamo.fecha_prestamos|date:"d M Y" }}</td>
 
-        .tabla-morada th,
-        .tabla-morada td {
-            padding: 12px 15px;
-        }
+                                    <td class="{% if prestamo.dias_retraso > 0 and not prestamo.fecha_devolucion %}text-danger fw-bold{% else %}text-muted{% endif %} small">
+                                        {{ prestamo.fecha_maxima|date:"d M Y" }}
+                                    </td>
 
-        .tabla-morada tbody tr {
-            border-bottom: 1px solid #dddddd;
-        }
+                                    <td class="text-center">
+                                        {% if prestamo.fecha_devolucion %}
+                                            <span class="text-success small fw-bold">
+                                                <i class="fas fa-check-double me-1"></i> Devuelto el:<br>
+                                                {{ prestamo.fecha_devolucion|date:"d M Y" }}
+                                            </span>
+                                        {% else %}
+                                            {% if prestamo.dias_retraso > 0 %}
+                                                <span class="badge bg-danger rounded-pill px-3">
+                                                    <i class="fas fa-exclamation-circle me-1"></i> Atrasado
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-warning text-dark rounded-pill px-3">
+                                                    <i class="fas fa-clock me-1"></i> En Curso
+                                                </span>
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
 
-        .tabla-morada tbody tr:nth-of-type(even) {
-            background-color: #f3e5f5; /* Morado muy clarito para intercalar */
-        }
+                                    <td class="text-center">
+                                        {% if not prestamo.fecha_devolucion %}
+                                            <a href="{% url 'devolver_libro' prestamo.id %}" class="btn btn-sm btn-outline-primary rounded-pill px-3 shadow-sm">
+                                                <i class="fas fa-undo-alt me-1"></i> Devolver
+                                            </a>
+                                        {% else %}
+                                            <span class="text-muted small"><i class="fas fa-archive"></i> Archivado</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="6" class="text-center py-5 text-muted">
+                                        <i class="fas fa-inbox fa-3x mb-3" style="color: var(--secondary-purple);"></i>
+                                        <p>No hay registro de préstamos.</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
 
-        .tabla-morada tbody tr:last-of-type {
-            border-bottom: 2px solid #6a1b9a;
-        }
-
-        .tabla-morada tbody tr:hover {
-            background-color: #e1bee7; /* Color al pasar el mouse */
-            color: #4a148c;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        h2 {
-            color: #4a148c;
-            text-align: center;
-            font-family: 'Segoe UI', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-    </style>
-
-    <h2>Prestamos Registrados</h2>
-
-    <div class="tabla-container">
-        <table class="tabla-morada">
-            <thead>
-                <tr>
-                    <th>Libro</th>
-                    <th>Usuario</th>
-                    <th>Fecha del prestamo</th>
-                    <th>Fecha maxima</th>
-                    <th>Fecha de devolucion</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for prestamo in prestamos %}
-                <tr>
-                    <td>{{ prestamo.libro }}</td>
-                    <td>{{ prestamo.usuario }}</td>
-                    <td>{{ prestamo.fecha_prestamos }}</td>
-                    <td>{{ prestamo.fecha_maxima}}</td>
-                    <td>{{ prestamo.fecha_devolucion }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
+
+<style>
+    .mt-n5 { margin-top: -60px; }
+    .table-hover tbody tr:hover {
+        background-color: rgba(74, 20, 140, 0.03);
+    }
+</style>
 
 {% endblock %}

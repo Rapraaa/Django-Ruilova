@@ -1,30 +1,79 @@
 {% extends "index.html" %} 
-<!--SELECCION DE AUTORES-->
+
 {% block contenido %}
-<h2> Crear Multa </h2>
 
-<form method = "POST">  <!-- INVESTIGAR TODO ESTE CODIGO Y ENTENDER LA LOGICA-->
-    {% csrf_token%} <!-- crea unas cookies de sesion apra saber que el que la hace es uno y no un bot o asi, EXPLICAER MAS A DETALLE-->
-<!-- para que no tenga  algo que lo llene automatico, INVESTIGAR DE ESTO-->
-    <select id= "id_prestamo" name="prestamo" required>                
-        <option value="">Seleccione un prestamo </option> <!--EXPLICAR ESTO DE LOPTION TAMBIEN--> <!-- creo que es como que da una opcion inicial, para que le deinsturciones al usuario-->
-        {% for prestamo in prestamos%} <!--RECORREMOS TODOS LOS AUTORES PARA QUE LOS PONGA EN EL OPTION-->
-        <option value="{{ prestamo.id }}">
-            {{prestamo.libro}} - {{prestamo.usuario}}
-        </option>
-        {% endfor %}
-    </select>
+<div class="container mt-n5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            
+            <div class="card dashboard-card shadow-lg border-0">
+                <div class="card-body p-5">
+                    
+                    <div class="d-flex align-items-center mb-4 border-bottom pb-3">
+                        <div class="icon-box me-3 mb-0" style="font-size: 2rem; color: #d32f2f;">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </div>
+                        <div>
+                            <h2 class="fw-bold m-0" style="color: var(--primary-purple);">Registrar Multa</h2>
+                            <p class="text-muted small m-0">Sancionar un préstamo vencido o dañado</p>
+                        </div>
+                    </div>
 
-    
-<br> </br>
-    <select id="id_tipo" name="tipo" required>
-        <option value="">Seleccione el tipo de multa</option>
-        <option value="r">Retraso</option>
-        <option value="p">Pérdida</option>
-        <option value="d">Deterioro</option> <!-- importante el value-->
-    </select>
-<li> <!-- para que vaya a la linea de abajo-->
-    <button type="submit" class="btn btn-custom mt-2" >Guardar</button> 
-</form> 
+                    <form method="POST"> 
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <label for="id_prestamo" class="form-label fw-bold" style="color: var(--secondary-purple);">
+                                Préstamo Asociado
+                            </label>
+                            <select id="id_prestamo" name="prestamo" class="form-select rounded-pill" required>
+                                <option value="" selected disabled>-- Buscar préstamo activo --</option>
+                                {% for prestamo in prestamos %} 
+                                    <option value="{{ prestamo.id }}">
+                                        {{ prestamo.libro.titulo }} (Prestado a: {{ prestamo.usuario.username }})
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <div class="form-text">Solo aparecen préstamos registrados.</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_tipo" class="form-label fw-bold" style="color: var(--secondary-purple);">
+                                Motivo de la Sanción
+                            </label>
+                            <select id="id_tipo" name="tipo" class="form-select rounded-pill" required>
+                                <option value="" selected disabled>-- Seleccione el motivo --</option>
+                                <option value="r">Retraso en devolución</option>
+                                <option value="p">Pérdida del libro</option>
+                                <option value="d">Deterioro / Daño físico</option>
+                            </select>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-custom btn-lg shadow">
+                                <i class="fas fa-gavel me-2"></i> Aplicar Multa
+                            </button>
+                            <a href="{% url 'index' %}" class="btn btn-outline-secondary btn-sm rounded-pill mt-2">
+                                Cancelar
+                            </a>
+                        </div>
+
+                    </form> 
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Estilos para que el borde se ponga rojo o morado al seleccionar */
+    .form-select:focus {
+        border-color: var(--primary-purple);
+        box-shadow: 0 0 0 0.25rem rgba(74, 20, 140, 0.1);
+    }
+    .mt-n5 { margin-top: -60px; }
+</style>
 
 {% endblock %}

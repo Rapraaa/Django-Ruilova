@@ -1,28 +1,90 @@
 {% extends "index.html" %} 
-<!--SELECCION DE AUTORES-->
+
 {% block contenido %}
-{% if not user.is_authenticated%}
 
-{% endif %}
-<h2>{{titulo}} </h2>
+<div class="container mt-n5">
+    <div class="row justify-content-center">
+        <div class="col-md-8"> <div class="card dashboard-card shadow-lg border-0">
+                <div class="card-body p-5">
+                    
+                    <div class="d-flex align-items-center mb-4 border-bottom pb-3">
+                        <div class="icon-box me-3 mb-0" style="font-size: 2rem;">
+                            <i class="fas fa-user-edit"></i>
+                        </div>
+                        <h2 class="fw-bold m-0" style="color: var(--primary-purple);">{{ titulo }}</h2>
+                    </div>
 
-<form method = "POST"> enctype = "multipart/form-data"  <!-- INVESTIGAR TODO ESTE CODIGO Y ENTENDER LA LOGICA-->
-    {% csrf_token%} <!-- crea unas cookies de sesion apra saber que el que la hace es uno y no un bot o asi, EXPLICAER MAS A DETALLE-->
-<!-- para que no tenga  algo que lo llene automatico, INVESTIGAR DE ESTO-->
-    <label for = "id_nombre" name= "nombre"> Nombre: </label>
-    <input placeholder = "Nombre. Ej Juan" type = "text" id = "id_nombre" name="nombre" value="{{autor.nombre | default_if_none:""}}" required> </label><br> <br>
-<!-- que pasa con el placeholder cuando tenemos el value??--> <!-- eXPLICAR LO DEL AUTOR NOMBRE | default_if_none-->
-    <label for = "id_apellido" name= "apellido"> Apellido: </label>
-    <input placeholder = "Apellido Ej. Perez" type = "text" id = "id_apellido" name="apellido" value="{{autor.apellido | default_if_none:""}}" required> </label> <br> <br> <!--INVESTIGAR TODO ESTO-->
-<!-- EL BR HACE UN SALTO DE LINEA PARA QUE CAIGA EN CASCADA TODO-->
-    <label for = "id_bibliografia" name= "bibliografia"> Bibliografia: </label>
-    <input placeholder = "Resumen del autor" type = "text" id = "id_bibliografia" name="bibliografia" value="{{autor.bibliografia| default_if_none:""}}" required> </label><br> <br>
+                    <form method="POST" enctype="multipart/form-data">
+                        {% csrf_token %} 
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="id_nombre" class="form-label fw-bold" style="color: var(--secondary-purple);">
+                                    Nombre
+                                </label>
+                                <input type="text" id="id_nombre" name="nombre" 
+                                       class="form-control rounded-pill" 
+                                       placeholder="Ej. Juan" 
+                                       value="{{ autor.nombre|default_if_none:'' }}" required>
+                            </div>
 
+                            <div class="col-md-6 mb-4">
+                                <label for="id_apellido" class="form-label fw-bold" style="color: var(--secondary-purple);">
+                                    Apellido
+                                </label>
+                                <input type="text" id="id_apellido" name="apellido" 
+                                       class="form-control rounded-pill" 
+                                       placeholder="Ej. Pérez" 
+                                       value="{{ autor.apellido|default_if_none:'' }}" required>
+                            </div>
+                        </div>
 
-    <label for='id_imagen'>Imagen: </label>
-    <input type="file" id = "id_imagen" name="imagen" accept="image/*"/></br>  <!--el accept le decimos que acepte archivos imagen y el * es uqe acepte cualquier tipo
-    si quisieramos solo png pro ejemplo quitamos el * y ponemos ESTO -->
-    <button type="submit" class = "btn btn-custom mt-2">{{texto_boton}}</button> <!-- para que el texto cambie-->
-</form> 
+                        <div class="mb-4">
+                            <label for="id_bibliografia" class="form-label fw-bold" style="color: var(--secondary-purple);">
+                                Bibliografía
+                            </label>
+                            <textarea id="id_bibliografia" name="bibliografia" 
+                                      class="form-control" rows="3" 
+                                      style="border-radius: 15px;"
+                                      placeholder="Resumen de la vida del autor..." required>{{ autor.bibliografia|default_if_none:'' }}</textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_imagen" class="form-label fw-bold" style="color: var(--secondary-purple);">
+                                <i class="fas fa-camera me-1"></i> Fotografía
+                            </label>
+                            <input type="file" id="id_imagen" name="imagen" accept="image/*" 
+                                   class="form-control rounded-pill">
+                            <div class="form-text">Formatos aceptados: .jpg, .png, .jpeg</div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 mt-4">
+                            <a href="{% url 'lista_autores' %}" class="btn btn-outline-secondary rounded-pill px-4">
+                                Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-custom px-5 shadow">
+                                <i class="fas fa-save me-2"></i> {{ texto_boton }}
+                            </button>
+                        </div>
+
+                    </form> 
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Estilos específicos para mejorar los inputs */
+    .form-control:focus {
+        border-color: var(--primary-purple);
+        box-shadow: 0 0 0 0.25rem rgba(74, 20, 140, 0.1);
+    }
+    
+    /* Margen negativo para subir la tarjeta */
+    .mt-n5 { margin-top: -60px; }
+</style>
 
 {% endblock %}
