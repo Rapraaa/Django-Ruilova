@@ -1,0 +1,93 @@
+{% extends "index.html" %} 
+
+{% block contenido %}
+
+<div class="container mt-n5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            
+            <div class="card dashboard-card shadow-lg border-0">
+                <div class="card-body p-5">
+                    
+                    <div class="d-flex align-items-center mb-4 border-bottom pb-3">
+                        <div class="icon-box me-3 mb-0" style="font-size: 2rem;">
+                            <i class="fas fa-hand-holding"></i> </div>
+                        <div>
+                            <h2 class="fw-bold m-0" style="color: var(--primary-purple);">Solicitar Nuevo Préstamo</h2>
+                            <p class="text-muted small m-0">Solicita a un bibliotecario un libro</p>
+                        </div>
+                    </div>
+
+                    <form method="POST"> 
+                        {% csrf_token %}
+                        
+                        <div class="mb-4">
+                            <label for="id_libro" class="form-label fw-bold" style="color: var(--secondary-purple);">
+                                Libro a solicitar
+                            </label>
+                            <select id="id_libro" name="libro" class="form-select rounded-pill" required>
+                                <option value="" selected disabled>-- Seleccione un libro disponible --</option>
+                                {% for libro in libros %}
+                                    <option value="{{ libro.id }}">
+                                        {{ libro.titulo }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold" style="color: var(--secondary-purple);">
+                                Usuario solicitante
+                            </label>
+                            
+                            <input type="text" 
+                                class="form-control rounded-pill bg-light" 
+                                value="{{ request.user.username }}" 
+                                readonly>
+                            
+                            <input type="hidden" name="usuario" value="{{ request.user.id }}">
+                            
+                            <div class="form-text">Solicitud realizada como el usuario actual.</div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="id_fecha_prestamo" class="form-label fw-bold" style="color: var(--secondary-purple);">
+                                Fecha de Solicitud
+                            </label>
+                            <input type="date" id="id_fecha_prestamo" name="fecha_prestamos" 
+                                   class="form-control rounded-pill text-center" 
+                                   value="{{ fecha }}" required>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-custom btn-lg shadow">
+                                <i class="fas fa-check me-2"></i> Confirmar Solicitud
+                            </button>
+                            <a href="{% url 'lista_prestamos' %}" class="btn btn-outline-secondary btn-sm rounded-pill mt-2">
+                                Cancelar
+                            </a>
+                        </div>
+
+                    </form> 
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Estilos para inputs y selects */
+    .form-control:focus, .form-select:focus {
+        border-color: var(--primary-purple);
+        box-shadow: 0 0 0 0.25rem rgba(74, 20, 140, 0.1);
+    }
+    /* Hace que el input de fecha se vea más centrado y prolijo */
+    input[type="date"] {
+        color: var(--primary-purple);
+        font-weight: 500;
+    }
+    .mt-n5 { margin-top: -60px; }
+</style>
+
+{% endblock %}

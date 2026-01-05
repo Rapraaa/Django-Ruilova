@@ -19,7 +19,11 @@ class Autor(models.Model): #parecido a django,
 #o el display name, aca en django lo que ahcemos es lo siguiente
     def __str__(self): #por que se pone __ ?????????????????????????????????????????????????????
         return f"{self.nombre} {self.apellido}" #aca nos va a devolver como NOMBRE DEL OBJETO el nombre, espacio apellido
-    
+    class Meta: 
+        permissions= { #el primero es el permiso requerido, el segundo el nom re del permiso en el admins
+            ("Ver_autores", "Puede_ver_autores"),
+            ("Gestionar_autores", "Puede_gestionar_autores")
+        }
 class Libro(models.Model): #clase para el libro
     titulo = models.CharField(max_length=20)
     #ACA TENEMOOS QUE HACER UNA RELACION, ACA NO HAY MANY2ONE COMO EN ODOO, ACA SE DEFINE DE UNA CON FOREIGN KEY, LO VOLVEMOS LALVE FORANEA
@@ -36,7 +40,11 @@ class Libro(models.Model): #clase para el libro
     disponible = models.BooleanField(default=True) #un boolean y por defecto viene acctivado
     def __str__(self):
         return self.titulo
-    
+    class Meta: 
+        permissions= {
+            ("Ver_libros", "Puede_ver_libros"),
+            ("Gestionar_libros", "Puede_gestionar_libros")
+        }
 class Prestamo(models.Model):
     libro = models.ForeignKey(Libro, related_name="prestamos", on_delete=models.PROTECT) #llave foranea con la clase de libros, prestamo y libros
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="prestamos", on_delete=models.PROTECT)  #PARA MANEJAR USUARIOS NECESITAMOS IMPORTAR UNA LIBRERIRA, asi "from django.conf import settings" importamos
@@ -61,20 +69,7 @@ class Prestamo(models.Model):
     
     #ATENTOS, HACEMOS ACA ESTO PARA QUE SIRVA DE DONE SEA QUE SE CREE EL USUARIO, NO SOLO DE LA PAGINA WEB
 
-    @receiver(post_save, sender=User) #que se ejecute solo despues de que se guarde algo, con el sender le decimos que ese algo es un usuario
-    def dar_permisos(sender, instance, created, **kwargs): #SENDER = Quién envió la señal (La clase User)
-        #instance: EL DATO CLAVE. Es el usuario específico que se acaba de crear (ej: "Juan Pérez")
-        #created: Un semáforo (Verdadero o Falso). Nos dice: "¿este usuario se acaba de crear hoy o solo modifico algo?"
-        #kwargs es como una bolsa que guarda cualquier otro dato que envie y que no necesitemos para evitar error, pq el psot save puede mandar mas cosas
-        #por ejemplo si en alguna parte guardo en el usuario con un update fields se damiaria si no uso el kwargs
-        if created: #si fue creado y no modificado
-            try: #va a intentar esto
-                grupo = Group.objects.get(name='Usuario(prestamos)') #saca en la variable grupos el grupo de usuario prestamos que cree desde admin
-
-                instance.groups.add(grupo) #a la instancia (el usuario que se creo) le va a agregar ese grupo
-
-            except Group.DoesNotExist: #si por algun motivo falla (que no deberia)
-                pass #no hace nada xd
+    ###
 
 
     #AHORA VAMOS A CREAR LAS FUNCIONES PARA LA FECHA MAXIMA, MULTAS Y ASI
@@ -158,3 +153,21 @@ class multa(models.Model):
         #hacer es llamar a la funcion padre, o original y ejecutarla, entonces lo que hace es que aparte de lo que definimos nosotros va a usar la funcion
         #original
         #EXPLICAR ESTA FUNCION?????????????????????????????????????????????????????????
+    class Meta: 
+        permissions= {
+            ("Ver_multas", "Puede_ver_multas"),
+            ("Gestionar_multas", "Puede_gestionar_multas")
+        }
+
+class SolicitudPrestamo(models.Model):
+    libro = models.ForeignKey(Libro, related_name="SolicitudPrestamos", on_delete=models.PROTECT) 
+    usuario = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="SolicitudPrestamos", on_delete=models.PROTECT)
+    fecha_solicitud = models.DateField(default = timezone.now) 
+    def __Str__(self):
+        return f'Solicitud de {self.usuario} para {self.libro}'
+    
+    class Meta: 
+        permissions= {
+            ("Ver_solicitudes_prestamos", "Puede_ver_solicitudes_prestamos"),
+            ("Gestionar_solicitudes_prestamos", "Puede_gestionar_solicitudes_prestamos")
+        }

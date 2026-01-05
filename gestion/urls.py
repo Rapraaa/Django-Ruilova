@@ -51,6 +51,8 @@ urlpatterns = [
     #QUE HAY QUE PONER EN EL NAME
     path('multas/pagar/<int:multa_id>/', pagar_multa, name='pagar_multa'), #PARA PAGAR MULTAS ANTENTOTJAIOJDASD
     path('prestamos/devolver/<int:prestamo_id>/', devolver_libro, name='devolver_libro'), #DEVOLVER LIBRO
+
+    path('prestamos/solicitar/', solicitar_prestamo, name='solicitar_prestamo'),
 ]  #hay que poner el mismo crear autor para los 2
 
 #enlazar prestamo a la multa

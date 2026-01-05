@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Autor, Prestamo, Libro, multa
+from .models import Autor, Prestamo, Libro, multa, SolicitudPrestamo
 # Register your models here.
 
 admin.site.register(Autor)  #paraa ver los autores en la pagina de adminstracion, es necesario importar el obketo o modulo tambien con
@@ -8,6 +8,8 @@ admin.site.register(Autor)  #paraa ver los autores en la pagina de adminstracion
 admin.site.register(Prestamo)
 
 admin.site.register(multa)
+
+admin.site.register(SolicitudPrestamo)
 
 #admin.site.register(Libro)
 

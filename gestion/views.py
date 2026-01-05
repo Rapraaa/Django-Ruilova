@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required #permite que una funcion antes de ser ejecutada revise si estoy o no logeado
 from django.utils import timezone
 from django.conf import settings 
-from .models import Autor, Libro, Prestamo, multa#importara las variables del settings  #PQ ACA NO ES DJANGO.MODELS Y SOLO ES .MODELS??
+from .models import Autor, Libro, Prestamo, multa, SolicitudPrestamo#importara las variables del settings  #PQ ACA NO ES DJANGO.MODELS Y SOLO ES .MODELS??
 from django.http import HttpResponseForbidden #para que lleve al forbiden
 from django.contrib.auth.forms import UserCreationForm #EES EL FORMULARIO PARA CREAR USUARIOS QUE YA VIENE CON DJANGO
 #PARA NO TENER QUE CREARLO NOSOTROS MISMOS
@@ -151,10 +151,9 @@ def crear_prestamo(request):
         #QUE HACE EL .id???? COMO FUNCIONA??
     fecha = (timezone.now().date()).isoformat # explciar esto QUE QUE EUQ?? expolicar
     #YYYY MM DD
-    return render(request, 'gestion/templates/crear_prestamo.html', {'libros': libros, 
+    return render(request, 'gestion/templates/solicitar_prestamo.html', {'libros': libros, 
                   "usuarios" : usuarios,
-                  'fecha' : fecha})   #EL ERRORE QUE TUVIMOS AHORITA FUE ACA, HAY QUE ABRIR LLAVE, PONER VALORES TODOS
-# Y LUEGO CERRAR LLAVE, NO POENMOS ABRIR LALVE VALOR, CERRRAR LAVVE, COMO ABRIRR LLAVE, CERRAR, Y ASI, ESO ROMPE TODITO
+                  'fecha' : fecha})
 
 def detalle_prestamo(request): #para editar o ver detalle, no se, aun falta
     pass
@@ -422,3 +421,31 @@ def pagar_multa(request, multa_id): #para pagar la multa
     multa_obj.pagado = True
     multa_obj.save() #al hacer save se calcularia el monto tambien
     return redirect('lista_multa')
+
+
+
+#TODO que si el libro no este disponible avise que en cuanto este se prestara
+#TODO PRIMERO que no pueda prestar si no esta dispomnible, luego que pueda pero que le avise que aun no esta disponible
+#ocupamos otro modelo para las solicitudes de prestamos
+
+def solicitar_prestamo(request):
+    libros = Libro.objects.filter(disponible = True) #mejor que todos, solo dan los disponibles
+
+    if request.method == 'POST': 
+        libros_id = request.POST.get('libro') #TODO explicar el request.post,get pq nos da el id?
+
+        if libros_id: #si ya existe, osea asi no lleno en blanco
+            libros = get_object_or_404(Libro, id=libros_id)
+            solicitud_prestamo = SolicitudPrestamo.objects.create(libro=libros, 
+                                    usuario=request.user) #TODO explicar el request user
+            return redirect('index') 
+    fecha = (timezone.now().date()).isoformat # explciar esto QUE QUE EUQ?? expolicar
+    #YYYY MM DD
+    return render(request, 'gestion/templates/solicitar_prestamo.html', {'libros': libros,
+                  'fecha' : fecha})   
+
+def lista_solicitudes_prestamo():
+    pass
+
+def gestionar_solicitudes_prestamo():
+    pass
