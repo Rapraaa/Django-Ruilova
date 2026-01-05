@@ -57,7 +57,7 @@ def lista_autores(request):
     autores = Autor.objects.all() #SELECT * FROM AUTORES #HAY QUE IMPORTAR EL AUTOR DEL MODELS PARA QUE LO RECONOZCA
     return render(request, 'gestion/templates/autores.html', {'autores' : autores} ) #explicar el render y quequest
  
-@login_required
+@login_required #TODO CREAR AUTOR Y EDITAR AUTOR JUNTOS PARA LOS DEMAS COSOS
 def crear_autor(request, id=None): #le pedimos el id pero puede ser none? #EXPLICAR #si el id no tiene valor sale con none
      #aca pedimos el parametro request, ya que sin request no hay como saber si es post o no                
     #EXPLICAER QUE ES UN METODO POST

@@ -14,7 +14,7 @@ class Autor(models.Model): #parecido a django,
     nombre = models.CharField(max_length=50) #models es tipo texto y tiene un maximo de caracteres de 50
     apellido = models.CharField(max_length=50) #lo mismo pero para apellido
     bibliografia = models.CharField(max_length=200, blank=True, null=True)
-    imagen = models.ImageField(upload_to='libros/', blank=True, null=True)
+    imagen = models.ImageField(upload_to='autores/', blank=True, null=True)
 #HAY QUE QUE ELEGIR CUAL VA A SER EL "NAME" por asi decir, el que sea el nombre o representante de la clase o objeto. en odoo usabamos el recname
 #o el display name, aca en django lo que ahcemos es lo siguiente
     def __str__(self): #por que se pone __ ?????????????????????????????????????????????????????
@@ -92,7 +92,8 @@ class Prestamo(models.Model):
         if fecha_ref > self.fecha_maxima: #si la fecha de referencia es mayor a la maxima
             return (fecha_ref - self.fecha_maxima).days #va a devolver los dias extras que se ha pasado con respeto a la fecha maxima
         #entender la logica,  pq se resta??
-        return 0
+        else: #ME FALTABA EL ELSE, POR ESO SIEMPRE DABA 0 ASI SI TUVIERA CACA, O NO? ACASO SOLO PUEDE DAR UN RETURN?
+            return 0 #ya teniamos el reeturn 0 de por si
 
     #ahora la de calcular la multa
     @property
