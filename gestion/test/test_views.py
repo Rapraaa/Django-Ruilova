@@ -32,7 +32,7 @@ class LibrosViewsTest(TestCase):
 
     # Este "patch" intercepta la llamada a internet y devuelve lo que nosotros queramos
     @patch('requests.get')
-    def test_buscar_libro_api_exito(self, mock_get):
+    def test_buscar_libro_api_exito(self, mock_get): #TODO #APRENDER  ESTO CUANDO TENGAMOS TIEMPO LIBRE
         # Simulamos una respuesta exitosa de la API (Mock)
         mock_get.return_value.status_code = 200
         mock_get.return_value.json.return_value = {
