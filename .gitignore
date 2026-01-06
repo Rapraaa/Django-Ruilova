@@ -3,3 +3,4 @@ __pycache__/
 *.pyc
 *.sock
 **/__pycache__/
+static
