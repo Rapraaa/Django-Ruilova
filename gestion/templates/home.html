@@ -1,46 +1,61 @@
 {% extends "index.html" %} 
 {% block contenido %}
     <div class="container">
-        <div class="row g-4">
+        <div class="row g-4 justify-content-center">
             
             <div class="col-md-6 col-lg-3">
-                <div class="dashboard-card p-4 text-center">
-                    <div class="icon-box">
-                        <i class="fas fa-book"></i> </div>
+                <div class="dashboard-card p-4 text-center h-100"> <div class="icon-box">
+                        <i class="fas fa-book"></i> 
+                    </div>
                     <h3>Libros</h3>
                     <p class="text-muted small">Catálogo completo e inventario.</p>
                     <a href="{% url 'lista_libros'%}" class="btn btn-custom mt-2">Ver Catálogo</a>
                 </div>
             </div>
 
+            {% if perms.gestion.Ver_autores %}
             <div class="col-md-6 col-lg-3">
-                <div class="dashboard-card p-4 text-center">
+                <div class="dashboard-card p-4 text-center h-100">
                     <div class="icon-box">
-                        <i class="fas fa-feather-alt"></i> </div>
+                        <i class="fas fa-feather-alt"></i> 
+                    </div>
                     <h3>Autores</h3>
                     <p class="text-muted small">Gestión de escritores y obras.</p>
                     <a href="{% url 'lista_autores' %}" class="btn btn-custom mt-2">Gestionar</a>
                 </div>
             </div>
+            {% endif %}
 
             <div class="col-md-6 col-lg-3">
-                <div class="dashboard-card p-4 text-center">
+                <div class="dashboard-card p-4 text-center h-100">
                     <div class="icon-box">
                         <i class="fas fa-handshake"></i> 
                     </div>
                     <h3>Préstamos</h3>
-                    <p class="text-muted small">Control de salidas y devoluciones.</p>
-                    <a href="{% url 'lista_prestamos'%}" class="btn btn-custom mt-2">Registrar</a>
+                    
+                    {% if perms.gestion.Ver_prestamos %}
+                        <p class="text-muted small">Control de salidas y devoluciones.</p>
+                        <a href="{% url 'lista_prestamos'%}" class="btn btn-custom mt-2">Registrar</a>
+                    {% else %}
+                        <p class="text-muted small">Solicita el préstamo de un libro</p>
+                        <a href="{% url 'solicitar_prestamo'%}" class="btn btn-custom mt-2">Solicitar</a>
+                    {% endif %}
                 </div>
             </div>
 
+            {% if perms.gestion.Ver_multas %}
             <div class="col-md-6 col-lg-3">
-                <div class="dashboard-card p-4 text-center">
+                <div class="dashboard-card p-4 text-center h-100">
                     <div class="icon-box">
-                        <i class="fas fa-exclamation-circle"></i> </div>
+                        <i class="fas fa-exclamation-circle"></i> 
+                    </div>
                     <h3>Multas</h3>
                     <p class="text-muted small">Sanciones y pagos pendientes.</p>
-                    <a href="{% url 'lista_multa' %}" class="btn btn-custom mt-2">Revisar</a>  <!-- solo hace falta cambiar aca el href no en la plantilla-->
+                    <a href="{% url 'lista_multa' %}" class="btn btn-custom mt-2">Revisar</a>
                 </div>
             </div>
+            {% endif %}
+
+        </div>
+    </div>
 {% endblock %}

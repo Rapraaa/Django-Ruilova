@@ -53,6 +53,8 @@ urlpatterns = [
     path('prestamos/devolver/<int:prestamo_id>/', devolver_libro, name='devolver_libro'), #DEVOLVER LIBRO
 
     path('prestamos/solicitar/', solicitar_prestamo, name='solicitar_prestamo'),
+    path('prestamos/solicitudes/', lista_solicitudes_prestamo, name='lista_solicitudes_prestamo'),
+    path('prestamos/solicitudes/aceptar/<int:SolicitudPrestamo_id>', gestionar_solicitudes_prestamo, name='gestionar_solicitudes_prestamo'),
 ]  #hay que poner el mismo crear autor para los 2
 
 #enlazar prestamo a la multa

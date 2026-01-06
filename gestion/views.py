@@ -8,7 +8,8 @@ from django.http import HttpResponseForbidden #para que lleve al forbiden
 from django.contrib.auth.forms import UserCreationForm #EES EL FORMULARIO PARA CREAR USUARIOS QUE YA VIENE CON DJANGO
 #PARA NO TENER QUE CREARLO NOSOTROS MISMOS
 from django.contrib.auth import login #el login que usamos para crear usuarios
-from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.decorators import permission_required, user_passes_test #el user paseees test es para verificar el GRUPO, osea yo lo uso para eso
+#de ahi es para si pasa el test entre sino mi loco dele pa fuera
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView#librerias genericas para el views
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin #clae 11-12-25
 from django.urls import reverse_lazy #clae 11-12-25
@@ -30,11 +31,14 @@ def index(request): #llamamos o obetenmos como respuesta un request, osea va a d
 ####################################
 ### LIBROSSSS ####################
 ################################
+#@login_required 
+#@permission_required('gestion.Ver_libros', raise_exception=True,) TODOS DEBERIAN PODER VER LIBROS, SI ALGO SI QUEREMOS QUE ALGUIEN NO
+#AHI HACEMOS SEGUN EL GRUPO, PERO ALGUIEN SIN INICIAR SESION SI DEBERIA PODERX``
 def lista_libros(request):
     libros = Libro.objects.all() 
     return render(request, 'gestion/templates/libros.html', {'libros' : libros} ) 
 
-""" el crear libro antiguo
+""" el crear libro antiguo antes de openlib
 def crear_libro(request): #hay que sacar los autores pq los necestiamos para que??
     autores = Autor.objects.all() #select * from autor
     #necesitamos los autores auqnue sea libros para poder hacer las opcioens de los autores con las que ya tenemos
@@ -60,6 +64,7 @@ def lista_autores(request):
     return render(request, 'gestion/templates/autores.html', {'autores' : autores} ) #explicar el render y quequest
  
 @login_required #TODO CREAR AUTOR Y EDITAR AUTOR JUNTOS PARA LOS DEMAS COSOS
+@permission_required('gestion.Gestionar_autores', raise_exception=True,) 
 def crear_autor(request, id=None): #le pedimos el id pero puede ser none? #EXPLICAR #si el id no tiene valor sale con none
      #aca pedimos el parametro request, ya que sin request no hay como saber si es post o no                
     #EXPLICAER QUE ES UN METODO POST
@@ -115,10 +120,11 @@ def lista_prestamos(request): #el pass  se ponia para que bo de error por mientr
     Prestamos = Prestamo.objects.all() #SELECT * FROM AUTORES #HAY QUE IMPORTAR EL AUTOR DEL MODELS PARA QUE LO RECONOZCA
     return render(request, 'gestion/templates/prestamos.html', {'prestamos' : Prestamos} ) #eEL DE LA izquierda, el de comillas es el que se llama en html
  #el de la derecha es la variable que creamos
+
+
 @login_required 
 @permission_required('gestion.Gestionar_prestamos', raise_exception=True,) #SI NO PONEMOS raise_exepction true en vez de el error lo mandara al login 
-
-#debe estar iniciado sesion y con permisos                                                                                 
+#debe estar iniciado sesion y con permisos                                                                               
 def crear_prestamo(request): 
    # if not request.user.has.perm(gestion.Gestion_prestamos):
     #    return HttpResponseForbidden() #from django.http import HttpResponseForbidden
@@ -151,17 +157,22 @@ def crear_prestamo(request):
         #QUE HACE EL .id???? COMO FUNCIONA??
     fecha = (timezone.now().date()).isoformat # explciar esto QUE QUE EUQ?? expolicar
     #YYYY MM DD
-    return render(request, 'gestion/templates/solicitar_prestamo.html', {'libros': libros, 
+    return render(request, 'gestion/templates/crear_prestamo.html', {'libros': libros, 
                   "usuarios" : usuarios,
                   'fecha' : fecha})
 
 def detalle_prestamo(request): #para editar o ver detalle, no se, aun falta
     pass
 
+@login_required 
+@permission_required('gestion.Ver_multas', raise_exception=True,) 
 def lista_multa(request):
     multas = multa.objects.all() #SELECT * FROM AUTORES #HAY QUE IMPORTAR EL AUTOR DEL MODELS PARA QUE LO RECONOZCA
     return render(request, 'gestion/templates/multas.html', {'multas' : multas} ) #explicar el render y quequest
                                                     #este multas es el que se hace en el for para que saque los datos
+
+@login_required 
+@permission_required('gestion.Gestionar_multas', raise_exception=True,)                                                    
 def crear_multa(request):  
     prestamos = Prestamo.objects.filter(fecha_devolucion = None) #para no poder haer multas si ya devolvieron el libro, no tendria sentido
 
@@ -199,6 +210,7 @@ def registro(request): #"Hola, soy la función encargada del registro. Dame la c
             usuario = form.save() #agarra los datos del formulario, conviértelos en una fila de SQL y guárdalos 
             #en la base de datos permanentemente. Y devuélveme al usuario creado en la variable usuario
             login(request, usuario)#ya que te acabas de registrar con éxito, te inicio sesión automáticamente ahora mismo para que entres directo
+            return redirect('index')
 
     else:
         form = UserCreationForm() #parentesis? para instanciarlo
@@ -248,6 +260,7 @@ class DeleteUpdateView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
 
 #CREAR LIBRO NUEVO PARA QUE SIRVA CON APIS
 @login_required 
+@permission_required('gestion.Gestionar_libros', raise_exception=True,)
 def crear_libro(request):
     datos_iniciales = {} #creamos le diccionario vacio donde guardaremos todo, luego esto mandamos al html
     mensaje_api = None #creamos la variable para que no de error luego, esto se llenara si la api manda algo
@@ -373,7 +386,8 @@ def crear_libro(request):
 
 
 #NUEVO devolver_prestamo
-@login_required
+@login_required 
+@permission_required('gestion.Gestionar_prestamos', raise_exception=True,)  
 def devolver_libro(request, prestamo_id):
     prestamo = get_object_or_404(Prestamo, id=prestamo_id)
     
@@ -415,7 +429,8 @@ def devolver_libro(request, prestamo_id):
 {% endif %}
 """
 
-@login_required
+@login_required 
+@permission_required('gestion.Gestionar_multas', raise_exception=True,)  
 def pagar_multa(request, multa_id): #para pagar la multa
     multa_obj = get_object_or_404(multa, id=multa_id)
     multa_obj.pagado = True
@@ -427,7 +442,8 @@ def pagar_multa(request, multa_id): #para pagar la multa
 #TODO que si el libro no este disponible avise que en cuanto este se prestara
 #TODO PRIMERO que no pueda prestar si no esta dispomnible, luego que pueda pero que le avise que aun no esta disponible
 #ocupamos otro modelo para las solicitudes de prestamos
-
+@login_required 
+@permission_required('gestion.Solicitar_prestamos', raise_exception=True,)
 def solicitar_prestamo(request):
     libros = Libro.objects.filter(disponible = True) #mejor que todos, solo dan los disponibles
 
@@ -444,8 +460,29 @@ def solicitar_prestamo(request):
     return render(request, 'gestion/templates/solicitar_prestamo.html', {'libros': libros,
                   'fecha' : fecha})   
 
-def lista_solicitudes_prestamo():
-    pass
+@login_required 
+@permission_required('gestion.Ver_solicitudes_prestamos', raise_exception=True,)
+def lista_solicitudes_prestamo(request): #TODO que despues de ciertos dias de la solicitud sin ser aceptada caduque?
+    solicitudes_prestamos = SolicitudPrestamo.objects.all() #SELECT * FROM AUTORES #HAY QUE IMPORTAR EL AUTOR DEL MODELS PARA QUE LO RECONOZCA
+    return render(request, 'gestion/templates/solicitudes_prestamos_list.html', {'prestamos' : solicitudes_prestamos} ) #e
 
-def gestionar_solicitudes_prestamo():
-    pass
+@login_required 
+@permission_required('gestion.Gestionar_solicitudes_prestamos', raise_exception=True,)
+def gestionar_solicitudes_prestamo(request, SolicitudPrestamo_id ):
+    solicitud= get_object_or_404(SolicitudPrestamo, id=SolicitudPrestamo_id)
+
+    if request.method == 'GET':
+        prestamo = Prestamo.objects.create(libro=solicitud.libro, 
+                                usuario=solicitud.usuario, 
+                                fecha_prestamos=timezone.now().date())
+                        
+        libro = solicitud.libro #accedemos a el libro mediante el fk, para editar el libro en vez del prestamo
+        libro.disponible = False 
+        libro.save()
+
+        solicitud.delete() #Como ya la solicitud se cumplio la borramos #TODO, capaz no deberiamos borraral para hacer lo de los logs, investigar
+        return redirect('lista_prestamos',) 
+    return redirect('index')
+
+
+#TODO como hago que si el usuario no este logueado si le salga completo el inicio, pero ya si se loguea lo que no toene acceso se quite

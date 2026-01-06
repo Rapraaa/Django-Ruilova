@@ -13,9 +13,11 @@
                         <h2 class="fw-bold" style="color: var(--primary-purple);">
                             <i class="fas fa-book me-2"></i>Catálogo de Libros
                         </h2>
-                        <a href="{% url 'crear_libro' %}" class="btn btn-custom shadow-sm">
-                            <i class="fas fa-plus me-1"></i> Nuevo Libro
-                        </a>
+                        {% if perms.gestion.Gestionar_libros %}
+                            <a href="{% url 'crear_libro' %}" class="btn btn-custom shadow-sm">
+                                <i class="fas fa-plus me-1"></i> Nuevo Libro
+                            </a>
+                        {%endif%}
                     </div>
 
                     <div class="table-responsive">
@@ -25,7 +27,9 @@
                                     <th style="color: var(--primary-purple);">Título</th>
                                     <th style="color: var(--primary-purple);">Autor</th>
                                     <th class="text-center" style="color: var(--primary-purple);">Disponibilidad</th>
+                                    {% if perms.gestion.Gestionar_libros %}
                                     <th class="text-center" style="color: var(--primary-purple);">Acciones</th>
+                                    {% endif %}
                                 </tr>
                             </thead>
                             <tbody>
@@ -46,12 +50,13 @@
                                             </span>
                                         {% endif %}
                                     </td>
-
+                                    {% if perms.Gestionar_libros%}
                                     <td class="text-center">
                                         <a href="#" class="btn btn-sm btn-outline-primary rounded-circle" title="Editar">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                     </td>
+                                    {% endif %}
                                 </tr>
                                 {% empty %}
                                 <tr>

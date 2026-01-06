@@ -62,7 +62,7 @@ class Prestamo(models.Model):
         permissions= {
             ("Ver_prestamos", "Puede_ver_prestamos"),
             ("Gestionar_prestamos", "Puede_gestionar_prestamos")
-        }
+        } #TODO codename, legible pa humanos
         
     def __str__(self):
         return f"prestamo de {self.libro} a {self.usuario}" #se usan CORCHETES, aca cramos un mensaje para el nombre del objeto
@@ -169,5 +169,13 @@ class SolicitudPrestamo(models.Model):
     class Meta: 
         permissions= {
             ("Ver_solicitudes_prestamos", "Puede_ver_solicitudes_prestamos"),
-            ("Gestionar_solicitudes_prestamos", "Puede_gestionar_solicitudes_prestamos")
+            ("Gestionar_solicitudes_prestamos", "Puede_gestionar_solicitudes_prestamos"),
+            ("Solicitar_prestamos", "Puede_solicitar_prestamos")
         }
+
+#TODO que si el usuario ahce click en el nombre de un autor lo lleve a los libros de SOLO ese autor
+#TODO QUE EL USUARIO PUEDA VER SUS PROPIOS PRESTAMOS Y MULTAS
+#TODO un perfil o algo apra ver el rol actual
+#TODO BARRA DE BUSQUEDA
+#TODO que se pueda rechazar las solicitudes sino quitar el boton
+#TODO se puede hacer que al iniciar sesion diga felcidades lala la y despues de unos segundos mande a home?

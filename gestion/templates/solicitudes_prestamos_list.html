@@ -1,0 +1,88 @@
+{% extends "index.html" %}
+
+{% block contenido %}
+
+<div class="container mt-n5">
+    <div class="row">
+        <div class="col-md-12">
+            
+            <div class="card dashboard-card shadow-lg border-0">
+                <div class="card-body p-4">
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="fw-bold" style="color: var(--primary-purple);">
+                            <i class="fas fa-clipboard-list me-2"></i>Gestión de Solicitudes Pendientes
+                        </h2>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead style="background-color: #f8f9fa;">
+                                <tr>
+                                    <th style="color: var(--primary-purple);">Libro Solicitado</th>
+                                    <th style="color: var(--primary-purple);">Usuario Solicitante</th>
+                                    <th style="color: var(--primary-purple);">Fecha de Solicitud</th>
+                                    <th class="text-center" style="color: var(--primary-purple);">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for prestamo in prestamos %}
+                                <tr>
+                                    <td class="fw-bold text-secondary">
+                                        <i class="fas fa-book me-1 small text-muted"></i> {{ prestamo.libro.titulo }}
+                                    </td>
+                                    
+                                    <td>
+                                        <i class="fas fa-user-circle me-1 small text-muted"></i> {{ prestamo.usuario.username }}
+                                    </td>
+
+                                    <td>{{ prestamo.fecha_solicitud|date:"d M Y" }}</td>
+
+                                    <td class="text-center">
+                                        <form action="{% url 'gestionar_solicitudes_prestamo' prestamo.id %}" method="GET" style="display:inline;">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm btn-success rounded-pill px-4 shadow-sm">
+                                                <i class="fas fa-check me-1"></i> Aprobar y Prestar
+                                            </button>
+                                        </form>
+                                        
+                                        <button class="btn btn-sm btn-outline-danger rounded-pill px-3 ms-2">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center py-5 text-muted">
+                                        <i class="fas fa-check-circle fa-3x mb-3" style="color: #28a745;"></i>
+                                        <p>No hay solicitudes pendientes por procesar.</p>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .mt-n5 { margin-top: -60px; }
+    .table-hover tbody tr:hover {
+        background-color: rgba(74, 20, 140, 0.03);
+    }
+    /* Estilo para que el botón se vea como el enlace anterior pero funcione como form */
+    .btn-success {
+        background-color: var(--primary-purple);
+        border-color: var(--primary-purple);
+    }
+    .btn-success:hover {
+        background-color: var(--secondary-purple);
+        border-color: var(--secondary-purple);
+    }
+</style>
+
+{% endblock %}

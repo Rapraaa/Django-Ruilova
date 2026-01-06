@@ -122,10 +122,22 @@
                 <ul class="navbar-nav align-items-center">
                     <li class="nav-item"><a class="nav-link active" href="{% url 'index' %}">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'lista_libros'%}">Libros</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_autores' %}">Autores</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_prestamos'%}">Préstamos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'lista_multa' %}">Multas</a></li>
-
+                    {% if perms.gestion.Ver_autores %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'lista_autores' %}">Autores</a></li>
+                    {% endif %}
+                    <li class="nav-item">
+                    {% if perms.gestion.Ver_prestamos %}
+                        <a class="nav-link" href="{% url 'lista_prestamos'%}">Préstamos</a>
+                    {% elif perms.gestion.Solicitar_prestamos %}
+                        <a class="nav-link" href="{% url 'solicitar_prestamo'%}">Solicitar préstamo</a>
+                    {% endif %}
+                    </li>
+                    {% if perms.gestion.Ver_solicitudes_prestamos %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'lista_solicitudes_prestamo' %}">Solicitudes</a></li>
+                    {% endif %}
+                    {% if perms.gestion.Ver_multas %}
+                        <li class="nav-item"><a class="nav-link" href="{% url 'lista_multa' %}">Multas</a></li>
+                    {% endif %}
                     {% if user.is_authenticated %}
                         <li class="nav-item ms-lg-3">
                             <span class="nav-link text-white fw-bold border border-light rounded-pill px-3 py-1">
@@ -154,9 +166,6 @@
         <div class="container">
             <h1 class="display-4 fw-bold">Gestión Bibliotecaria</h1>
             <p class="lead mb-4" style="color: var(--light-accent);">Administra el conocimiento con elegancia.</p>
-            <a href="{% url 'crear_prestamo' %}" class="btn btn-light text-primary fw-bold rounded-pill px-5 py-2 shadow transition-hover">
-                <i class="fas fa-plus me-2"></i>Nuevo Préstamo
-            </a>
         </div>
     </header>
 
