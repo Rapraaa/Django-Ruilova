@@ -1,0 +1,85 @@
+{% extends 'index.html' %} 
+
+{% block contenido %}
+<div class="container mt-n5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            
+            <div class="card dashboard-card shadow-lg border-0">
+                
+                <div class="card-header bg-white border-0 pt-4 pb-0 text-center">
+                     <div class="mb-3">
+                        <span class="avatar-sm bg-light rounded-circle text-primary fw-bold d-inline-block shadow-sm" 
+                              style="width: 60px; height: 60px; line-height: 60px; font-size: 1.5rem;">
+                            {{ usuario.username|slice:":1"|upper }}
+                        </span>
+                     </div>
+                     <h3 class="fw-bold" style="color: var(--primary-purple);">Editando a {{ usuario.username }}</h3>
+                     <p class="text-muted small">{{ usuario.email }}</p>
+                </div>
+
+                <div class="card-body p-4">
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="mb-4 p-3 rounded border bg-light">
+                            <label class="fw-bold mb-2" style="color: var(--primary-purple);">Estado de la Cuenta</label>
+                            <div class="form-check form-switch">
+                                {{ form.is_active }}
+                                <label class="form-check-label fw-bold ms-2" for="{{ form.is_active.id_for_label }}">
+                                    Usuario Habilitado
+                                </label>
+                            </div>
+                            <small class="text-muted d-block mt-1">
+                                <i class="fas fa-info-circle me-1"></i> Si desactivas esto, el usuario no podrá iniciar sesión.
+                            </small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="fw-bold mb-2" style="color: var(--primary-purple);">Asignación de Roles</label>
+                            <div class="card bg-light border-0">
+                                <div class="card-body">
+                                    {% for checkbox in form.groups %} <!-- aca hay que usar el forms.groups- form es lo que mandamos, groups
+                                    para que mande el formulario qeu hicimos -->
+                                        <div class="form-check mb-2">
+                                            {{ checkbox.tag }}
+                                            <label class="form-check-label" for="{{ checkbox.id_for_label }}">
+                                                {{ checkbox.choice_label }}
+                                            </label>
+                                        </div>
+                                    {% empty %}
+                                        <p class="text-muted small">No hay grupos creados en el sistema.</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-custom shadow py-2">
+                                <i class="fas fa-save me-2"></i> Guardar Cambios
+                            </button>
+                            <a href="{% url 'lista_usuarios' %}" class="btn btn-outline-secondary rounded-pill py-2">
+                                Cancelar
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .mt-n5 { margin-top: -60px; }
+    
+    /* Estilo para los checkboxes del formulario de Django */
+    .form-check-input:checked {
+        background-color: var(--primary-purple);
+        border-color: var(--primary-purple);
+    }
+    
+    /* Ajuste para centrar el formulario si es corto */
+    .card-header { border-bottom: 1px solid rgba(0,0,0,0.05) !important; }
+</style>
+{% endblock %}

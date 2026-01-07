@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'gestion',
     'django_extensions', #este es para unas extensiones utiles, lo use para refrescar un permiso que no se cambiaba correctamente
+    'simple_history' #los logs
 ]
 
 MIDDLEWARE = [
@@ -56,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware' #logs x2
 ]
 
 ROOT_URLCONF = 'Django_ruilova.urls'

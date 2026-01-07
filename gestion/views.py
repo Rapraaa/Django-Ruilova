@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404 #que hace el object_or_404?
-from django.contrib.auth.models import User 
+from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import login_required #permite que una funcion antes de ser ejecutada revise si estoy o no logeado
 from django.utils import timezone
 from django.conf import settings 
@@ -14,8 +14,11 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView, D
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin #clae 11-12-25
 from django.urls import reverse_lazy #clae 11-12-25
 
+#NECESARIO PARA LA GESTION DE USUARIOS
+from django import forms
 #NECESARIO PARA LA API
 import requests #permite a python navegar
+from operator import attrgetter# para los logs
 
 # Create your views here.
 
@@ -177,7 +180,7 @@ def crear_multa(request):
     prestamos = Prestamo.objects.filter(fecha_devolucion = None) #para no poder haer multas si ya devolvieron el libro, no tendria sentido
 
     if request.method == 'POST': #si quieren enviar
-        prestamo_id = request.POST.get('prestamos') # el related name es prestamos#aca tenemos el id
+        prestamo_id = request.POST.get('prestamo') # el related name es prestamos#aca tenemos el id
         tipo = request.POST.get('tipo')
 
         if prestamo_id and tipo:
@@ -187,7 +190,7 @@ def crear_multa(request):
                 prestamo=prestamo,
                 tipo=tipo, 
             )
-            return redirect('lista_multas')
+            return redirect('lista_multa')
     return render(request, 'gestion/templates/crear_multa.html', {'prestamos': prestamos})
 
 
@@ -471,7 +474,7 @@ def lista_solicitudes_prestamo(request): #TODO que despues de ciertos dias de la
 def gestionar_solicitudes_prestamo(request, SolicitudPrestamo_id ):
     solicitud= get_object_or_404(SolicitudPrestamo, id=SolicitudPrestamo_id)
 
-    if request.method == 'GET':
+    if request.method == 'POST':
         prestamo = Prestamo.objects.create(libro=solicitud.libro, 
                                 usuario=solicitud.usuario, 
                                 fecha_prestamos=timezone.now().date())
@@ -486,3 +489,80 @@ def gestionar_solicitudes_prestamo(request, SolicitudPrestamo_id ):
 
 
 #TODO como hago que si el usuario no este logueado si le salga completo el inicio, pero ya si se loguea lo que no toene acceso se quite
+
+#VISTASS DE USUARIOS PARA EL ADMINISTRADOR OU YEA CHACARRON 
+class EditarRolForm(forms.ModelForm):#HACEMOS EL FORMS CON UNA PLANTILLA YA DE DJANGO, con mixins, asi no tenemos que hacer todo a mano que pereza
+    groups = forms.ModelMultipleChoiceField( #django ya tiene el campo grups, pero esta feo asi que lo reescribimos, utilizamos un 
+        #modelo ya de django para cuano son opciones multiples
+        queryset=Group.objects.all(), #query set son las opciones uqe msotrara, muestra todos los grupos
+        widget=forms.CheckboxSelectMultiple, #esto es pura apariencia visual, 
+        label="Roles / Grupos Asignados", #lo que va a decir, labels nada mas
+        required=False #si es requerido tener un grupo si o si, false para poder hacer usuario sin gurpo, auqnue por defecto
+        #tiene el grupo usuario
+    )
+    class Meta: #aca decimos como se comporte, el query set tiene los datos pero no sabe a quien asignar, aca ya sabe
+        model = User #es para decirle que el formulario se basa en el modelo que ya existe del user
+        fields = ['groups'] #de todos lso campos que hay, que solo salgan los grupos
+
+
+@login_required
+@permission_required('auth.change_user', raise_exception=True)
+def lista_usuarios(request):
+    # Excluimos superusuarios por seguridad
+    usuarios = User.objects.filter(is_superuser=False).order_by('id') #trae los usuarios ordenados, pero no trae superusers para no romper cosas
+    return render(request, 'gestion/templates/lista_usuarios.html', {'usuarios': usuarios})#luego con el for hacemos el tralalelo
+
+# --- 3. VISTA: EDITAR ROLES (Entras a esta pantalla para cambiar grupos) ---
+@login_required
+@permission_required('auth.change_user', raise_exception=True)
+def editar_usuario(request, user_id):
+    usuario = get_object_or_404(User, id=user_id) #sacamos el usuario
+    
+    if request.method == 'POST':
+        form = EditarRolForm(request.POST, instance=usuario)#instance es para que en vez de crear un usuario 
+        #edite el usuario que agarro antes
+        if form.is_valid(): #revisa que sea valido asjpidjal jdas d, limipia datos en form.cleaned_data, si hay erro rllena form.errors
+            form.save() #guarda
+            return redirect('lista_usuarios')
+    else:
+        form = EditarRolForm(instance=usuario) #solo le da el formulario del usuario que eligio
+
+    return render(request, 'gestion/templates/editar_usuarios.html', {'form': form, 'usuario': usuario}) #mandamos al html el usuario pa que liste
+    #el form paque haga la ivsta
+
+@login_required
+@permission_required('auth.change_user', raise_exception=True)
+def bloqueo_usuario(request, user_id):
+    if request.method == 'POST': # si es post, el bvoton le pusimos ne post, es mejor post por que si es get hay fallos de seguridad
+        usuario = get_object_or_404(User, id=user_id) #saca el usuario
+        if not usuario.is_superuser: #vemos que no sea super usuario, de por si ya filtramos en la lista pero por si acaso
+            usuario.is_active = not usuario.is_active #con el not invertimos le alor
+            usuario.save() # guardamso que rico
+    return redirect('lista_usuarios')
+
+
+@login_required
+@permission_required('gestion.Ver_auditoria_global', raise_exception=True) 
+def auditoria_global(request):
+    # traemos los historiales de cada modelo
+    h_libros = list(Libro.history.all())
+    h_prestamos = list(Prestamo.history.all())
+    h_multas = list(multa.history.all())
+    h_solicitudes = list(SolicitudPrestamo.history.all())
+
+    # le ponemos el atributo modelo_origen, para poder entrar a datos solo del pibro, del prestamo y diferenciarlos
+    #esto es improtante pq diamos quiero sacar item.titulo, para libro sirve, pero multa no tiene titulo y todo esta junto recordemos
+    #entonces a cada libro le pongo etiqueta livros, prestamo y asi.
+    for h in h_libros: h.modelo_origen = 'Libro'
+    for h in h_prestamos: h.modelo_origen = 'Préstamo'
+    for h in h_multas: h.modelo_origen = 'Multa'
+    for h in h_solicitudes: h.modelo_origen = 'Solicitud'
+
+    #Mezclamos todo en una sola lista
+    lista_total = h_libros + h_prestamos + h_multas + h_solicitudes
+
+    #Ordenamos la lista mezclada por fecha (history_date)
+    #attrgetter es attribute getter, avisa en que centrarse, va a ordenar de mayor a menor segun la fecha, sino no sabria segun que ordenar
+    historial_ordenado = sorted(lista_total, key=attrgetter('history_date'), reverse=True)
+
+    return render(request, 'auditoria_global.html', {'historial': historial_ordenado})

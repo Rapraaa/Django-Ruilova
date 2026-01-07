@@ -39,7 +39,7 @@
                                     <td>{{ prestamo.fecha_solicitud|date:"d M Y" }}</td>
 
                                     <td class="text-center">
-                                        <form action="{% url 'gestionar_solicitudes_prestamo' prestamo.id %}" method="GET" style="display:inline;">
+                                        <form action="{% url 'gestionar_solicitudes_prestamo' prestamo.id %}" method="POST" style="display:inline;">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-sm btn-success rounded-pill px-4 shadow-sm">
                                                 <i class="fas fa-check me-1"></i> Aprobar y Prestar

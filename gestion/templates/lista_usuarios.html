@@ -1,0 +1,106 @@
+{% extends 'index.html' %} 
+
+{% block contenido %}
+<div class="container mt-n5">
+    <div class="row">
+        <div class="col-12">
+            
+            <div class="card dashboard-card shadow-lg border-0">
+                <div class="card-body p-4">
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="fw-bold" style="color: var(--primary-purple);">
+                            <i class="fas fa-users-cog me-2"></i>Panel de Control de Usuarios
+                        </h2>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead style="background-color: #f8f9fa;">
+                                <tr>
+                                    <th style="color: var(--primary-purple);">Usuario</th>
+                                    <th style="color: var(--primary-purple);">Roles Actuales</th>
+                                    <th class="text-center" style="color: var(--primary-purple);">Estado</th>
+                                    <th class="text-center" style="color: var(--primary-purple);">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for u in usuarios %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-sm me-3 bg-light rounded-circle text-center text-primary fw-bold shadow-sm" 
+                                                 style="width: 40px; height: 40px; line-height: 40px; font-size: 1.2rem;">
+                                                {{ u.username|slice:":1"|upper }} <!-- ACA con el slice >1 sacamos la inicial-->
+                                            </div>
+                                            <div>
+                                                <div class="fw-bold text-dark">{{ u.username }}</div>
+                                                <div class="small text-muted">{{ u.email }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    
+                                    <td>
+                                        {% for grupo in u.groups.all %}
+                                           <span class="badge rounded-pill bg-info text-dark border border-info px-3 mb-1">
+                                               {{ grupo.name }}
+                                           </span>
+                                        {% empty %}
+                                           <span class="text-muted small fst-italic">Sin roles asignados</span>
+                                        {% endfor %}
+                                    </td>
+
+                                    <td class="text-center">
+                                        {% if u.is_active %}
+                                            <span class="badge rounded-pill bg-success px-3">
+                                                <i class="fas fa-check-circle me-1"></i> Activo
+                                            </span>
+                                        {% else %}
+                                            <span class="badge rounded-pill bg-danger px-3">
+                                                <i class="fas fa-ban me-1"></i> Bloqueado
+                                            </span>
+                                        {% endif %}
+                                    </td>
+
+                                    <td class="text-center">
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'editar_usuario' u.id %}" class="btn btn-sm btn-outline-primary rounded-start" title="Editar Roles">
+                                               <i class="fas fa-user-edit"></i>
+                                            </a>
+
+                                            <form action="{% url 'bloqueo_usuarios' u.id %}" method="POST" class="d-inline">
+                                                {% csrf_token %}
+                                                {% if u.is_active %}
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger rounded-end" title="Bloquear Acceso" onclick="return confirm('¿Estás seguro de bloquear a este usuario?');">
+                                                        <i class="fas fa-lock"></i>
+                                                    </button>
+                                                {% else %}
+                                                    <button type="submit" class="btn btn-sm btn-outline-success rounded-end" title="Reactivar Acceso">
+                                                        <i class="fas fa-unlock"></i>
+                                                    </button>
+                                                {% endif %}
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Ajuste para que la tarjeta suba sobre el header oscuro */
+    .mt-n5 { margin-top: -60px; }
+    
+    /* Efecto hover en las filas */
+    .table-hover tbody tr:hover {
+        background-color: rgba(74, 20, 140, 0.03);
+    }
+</style>
+{% endblock %}

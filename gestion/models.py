@@ -7,7 +7,7 @@ from django.dispatch import receiver #PARA LOS PERMISOS AUTOMATICOS
 from django.db.models.signals import post_save #para los permisos automartico, se ejecuta despues de guardarse
 from django.contrib.auth.models import User, Group #para los usuarios  y grupos y permisos automaricos
 from datetime import datetime #para convertir string a fecha
-
+from simple_history.models import HistoricalRecords #PARA LOS LOGS
 # Create your models here.
 class Autor(models.Model): #parecido a django, 
 #aca ya no necesitamos eso del guion bajo name, description nada de eso
@@ -15,6 +15,7 @@ class Autor(models.Model): #parecido a django,
     apellido = models.CharField(max_length=50) #lo mismo pero para apellido
     bibliografia = models.CharField(max_length=200, blank=True, null=True)
     imagen = models.ImageField(upload_to='autores/', blank=True, null=True)
+    historial = HistoricalRecords() #los logs
 #HAY QUE QUE ELEGIR CUAL VA A SER EL "NAME" por asi decir, el que sea el nombre o representante de la clase o objeto. en odoo usabamos el recname
 #o el display name, aca en django lo que ahcemos es lo siguiente
     def __str__(self): #por que se pone __ ?????????????????????????????????????????????????????
@@ -29,6 +30,7 @@ class Libro(models.Model): #clase para el libro
     #ACA TENEMOOS QUE HACER UNA RELACION, ACA NO HAY MANY2ONE COMO EN ODOO, ACA SE DEFINE DE UNA CON FOREIGN KEY, LO VOLVEMOS LALVE FORANEA
     autor = models.ForeignKey(Autor, related_name="libros", on_delete=models.PROTECT) #TAMBIEN DEBEMOS DEFINIR DE QUIEN ES LA LALVE FORANEA, en este caso de autor, tambien hay que
     imagen = models.ImageField(upload_to='libros/', blank=True, null=True) #las imagenes de los libros, explicacion mas avanzada en obisdian
+    history = HistoricalRecords() #los logs
     #upload to es donde lo vamos a cargar, en la carpeta llamada '' y blank es que le permite estar en blanco, sin imagen y null lo mismo
     #definir un related name
     #siempre en una foreign key hay que poner el ON DELETE, es decirle que hacer cuando alguien queira borrarlo, ya que tiene
@@ -48,6 +50,7 @@ class Libro(models.Model): #clase para el libro
 class Prestamo(models.Model):
     libro = models.ForeignKey(Libro, related_name="prestamos", on_delete=models.PROTECT) #llave foranea con la clase de libros, prestamo y libros
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="prestamos", on_delete=models.PROTECT)  #PARA MANEJAR USUARIOS NECESITAMOS IMPORTAR UNA LIBRERIRA, asi "from django.conf import settings" importamos
+    history = HistoricalRecords() #los logs
     #settins acca, necesitamos el tema del auth
     #sacamos el auth_user_model, desde donde? desde settings,
     #QUE HACE EL AUTH USER MODEL ???????????????????????????????????????????????????/
@@ -61,7 +64,8 @@ class Prestamo(models.Model):
     class Meta: #PARA LA METADADDA, APRENDER POO PARA VER QUE ES ESTO DE UN CLASS DEONTRO DE OTRO CLASS
         permissions= {
             ("Ver_prestamos", "Puede_ver_prestamos"),
-            ("Gestionar_prestamos", "Puede_gestionar_prestamos")
+            ("Gestionar_prestamos", "Puede_gestionar_prestamos"),
+            ("Ver_auditoria_global", "Puede ver la auditoría global del sistema"),
         } #TODO codename, legible pa humanos
         
     def __str__(self):
@@ -139,7 +143,7 @@ class multa(models.Model):
     monto = models.DecimalField(max_digits=10, decimal_places=2, default=0) #decimal field es como el float, decimal_places es para ver cuantos decimales puede tener
     pagado = models.BooleanField(default=False) #para ver si esta pagado o no pagado
     fecha = models.DateField(default=timezone.now) #fecha a la que se crea la multa ,por defecto la fecha actual
-
+    history = HistoricalRecords() #los logs
     def __str__(self):
         return f"Multa {self.tipo} - {self.monto} - {self.prestamo}"
     
@@ -163,6 +167,7 @@ class SolicitudPrestamo(models.Model):
     libro = models.ForeignKey(Libro, related_name="SolicitudPrestamos", on_delete=models.PROTECT) 
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="SolicitudPrestamos", on_delete=models.PROTECT)
     fecha_solicitud = models.DateField(default = timezone.now) 
+    history = HistoricalRecords() #los logs
     def __Str__(self):
         return f'Solicitud de {self.usuario} para {self.libro}'
     
@@ -179,3 +184,4 @@ class SolicitudPrestamo(models.Model):
 #TODO BARRA DE BUSQUEDA
 #TODO que se pueda rechazar las solicitudes sino quitar el boton
 #TODO se puede hacer que al iniciar sesion diga felcidades lala la y despues de unos segundos mande a home?
+#TODO revisar la seguridad con mas crsf tokens, me olvide de poner varios de esos

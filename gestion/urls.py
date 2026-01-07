@@ -55,6 +55,15 @@ urlpatterns = [
     path('prestamos/solicitar/', solicitar_prestamo, name='solicitar_prestamo'),
     path('prestamos/solicitudes/', lista_solicitudes_prestamo, name='lista_solicitudes_prestamo'),
     path('prestamos/solicitudes/aceptar/<int:SolicitudPrestamo_id>', gestionar_solicitudes_prestamo, name='gestionar_solicitudes_prestamo'),
+
+
+
+    path('usuarios/', lista_usuarios, name='lista_usuarios'),
+    path('usuarios/<int:user_id>/editar/', editar_usuario, name='editar_usuario'),
+    path('usuarios/<int:user_id>/toggle/', bloqueo_usuario, name='bloqueo_usuarios'),
+
+
+    path('logs/', auditoria_global, name='auditoria_global'),
 ]  #hay que poner el mismo crear autor para los 2
 
 #enlazar prestamo a la multa

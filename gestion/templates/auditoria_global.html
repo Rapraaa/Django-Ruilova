@@ -1,0 +1,103 @@
+{% extends "index.html" %}
+
+{% block contenido %}
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold" style="color: var(--primary-purple);">
+            <i class="fas fa-history me-2"></i> Auditoría Global del Sistema
+        </h2>
+        <a href="{% url 'index' %}" class="btn btn-outline-secondary rounded-pill">
+            <i class="fas fa-arrow-left"></i> Volver
+        </a>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+
+            {% for item in historial %}
+            <div class="card mb-3 shadow-sm border-0" style="border-left: 5px solid 
+                {% if item.history_type == '+' %}#198754{% elif item.history_type == '~' %}#ffc107{% else %}#dc3545{% endif %};">
+                
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        
+                        <div class="col-md-1 text-center">
+                            <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto" 
+                                 style="width: 50px; height: 50px; background-color: var(--light-accent); color: var(--primary-purple); font-size: 1.5rem;">
+                                {% if item.modelo_origen == 'Libro' %}
+                                    <i class="fas fa-book"></i> <!-- le pone un dibujito segun el tipo-->
+                                {% elif item.modelo_origen == 'Préstamo' %}
+                                    <i class="fas fa-handshake"></i>
+                                {% elif item.modelo_origen == 'Multa' %}
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                {% elif item.modelo_origen == 'Solicitud' %}
+                                    <i class="fas fa-envelope"></i>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="col-md-8">
+                            <h5 class="mb-1 fw-bold">
+                                {{ item.modelo_origen }}
+                                {% if item.history_type == '+' %}
+                                    <span class="badge bg-success ms-2" style="font-size: 0.7em;">Creación</span>
+                                {% elif item.history_type == '~' %}
+                                    <span class="badge bg-warning text-dark ms-2" style="font-size: 0.7em;">Modificación</span>
+                                {% elif item.history_type == '-' %}
+                                    <span class="badge bg-danger ms-2" style="font-size: 0.7em;">Eliminación</span>
+                                {% endif %}
+                            </h5>
+
+                            <p class="mb-1 text-secondary">
+                                {% if item.modelo_origen == 'Libro' %}
+                                    Libro: <strong>{{ item.titulo }}</strong> <br>
+                                    <small>Autor ID: {{ item.autor_id }}</small>
+
+                                {% elif item.modelo_origen == 'Préstamo' %}
+                                    Préstamo ID: #{{ item.id }} <br>
+                                    Libro ID: {{ item.libro_id }} | Usuario ID: {{ item.usuario_id }}
+                                    
+                                {% elif item.modelo_origen == 'Multa' %}
+                                    Monto: <strong>${{ item.monto }}</strong> <br>
+                                    Tipo: {{ item.get_tipo_display }} | Pagado: {{ item.pagado|yesno:"Sí,No" }}
+
+                                {% elif item.modelo_origen == 'Solicitud' %}
+                                    Solicitud de: Usuario ID {{ item.usuario_id }} <br>
+                                    Para libro ID: {{ item.libro_id }}
+                                {% endif %}
+                            </p>
+                        </div>
+
+                        <div class="col-md-3 text-end">
+                            <small class="text-muted d-block">
+                                <i class="far fa-calendar-alt"></i> {{ item.history_date|date:"d M Y" }}
+                            </small>
+                            <small class="text-muted d-block">
+                                <i class="far fa-clock"></i> {{ item.history_date|time:"H:i" }}
+                            </small>
+                            <div class="mt-2">
+                                <span class="badge rounded-pill bg-light text-dark border">
+                                    <i class="fas fa-user-shield"></i> 
+                                    {% if item.history_user %}
+                                        {{ item.history_user.username }}
+                                    {% else %}
+                                        Sistema
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+
+                    </div> </div>
+            </div>
+            {% empty %}
+                <div class="text-center py-5">
+                    <i class="fas fa-wind fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No hay registros de auditoría disponibles.</p>
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}
