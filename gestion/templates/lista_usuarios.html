@@ -30,7 +30,7 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <div class="avatar-sm me-3 bg-light rounded-circle text-center text-primary fw-bold shadow-sm" 
-                                                 style="width: 40px; height: 40px; line-height: 40px; font-size: 1.2rem;">
+                                                style="width: 40px; height: 40px; line-height: 40px; font-size: 1.2rem;">
                                                 {{ u.username|slice:":1"|upper }} <!-- ACA con el slice >1 sacamos la inicial-->
                                             </div>
                                             <div>
@@ -42,11 +42,11 @@
                                     
                                     <td>
                                         {% for grupo in u.groups.all %}
-                                           <span class="badge rounded-pill bg-info text-dark border border-info px-3 mb-1">
-                                               {{ grupo.name }}
-                                           </span>
+                                        <span class="badge rounded-pill bg-info text-dark border border-info px-3 mb-1">
+                                            {{ grupo.name }}
+                                        </span>
                                         {% empty %}
-                                           <span class="text-muted small fst-italic">Sin roles asignados</span>
+                                        <span class="text-muted small fst-italic">Sin roles asignados</span>
                                         {% endfor %}
                                     </td>
 
@@ -65,7 +65,7 @@
                                     <td class="text-center">
                                         <div class="btn-group" role="group">
                                             <a href="{% url 'editar_usuario' u.id %}" class="btn btn-sm btn-outline-primary rounded-start" title="Editar Roles">
-                                               <i class="fas fa-user-edit"></i>
+                                            <i class="fas fa-user-edit"></i>
                                             </a>
 
                                             <form action="{% url 'bloqueo_usuarios' u.id %}" method="POST" class="d-inline">

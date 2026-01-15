@@ -23,9 +23,9 @@
                                     Nombre
                                 </label>
                                 <input type="text" id="id_nombre" name="nombre" 
-                                       class="form-control rounded-pill" 
-                                       placeholder="Ej. Juan" 
-                                       value="{{ autor.nombre|default_if_none:'' }}" required>
+                                    class="form-control rounded-pill" 
+                                    placeholder="Ej. Juan" 
+                                    value="{{ autor.nombre|default_if_none:'' }}" required>
                             </div>
 
                             <div class="col-md-6 mb-4">
@@ -33,9 +33,9 @@
                                     Apellido
                                 </label>
                                 <input type="text" id="id_apellido" name="apellido" 
-                                       class="form-control rounded-pill" 
-                                       placeholder="Ej. Pérez" 
-                                       value="{{ autor.apellido|default_if_none:'' }}" required>
+                                    class="form-control rounded-pill" 
+                                    placeholder="Ej. Pérez" 
+                                    value="{{ autor.apellido|default_if_none:'' }}" required>
                             </div>
                         </div>
 
@@ -44,9 +44,9 @@
                                 Bibliografía
                             </label>
                             <textarea id="id_bibliografia" name="bibliografia" 
-                                      class="form-control" rows="3" 
-                                      style="border-radius: 15px;"
-                                      placeholder="Resumen de la vida del autor..." required>{{ autor.bibliografia|default_if_none:'' }}</textarea>
+                                    class="form-control" rows="3" 
+                                    style="border-radius: 15px;"
+                                    placeholder="Resumen de la vida del autor..." required>{{ autor.bibliografia|default_if_none:'' }}</textarea>
                         </div>
 
                         <div class="mb-4">
@@ -54,7 +54,7 @@
                                 <i class="fas fa-camera me-1"></i> Fotografía
                             </label>
                             <input type="file" id="id_imagen" name="imagen" accept="image/*" 
-                                   class="form-control rounded-pill">
+                                class="form-control rounded-pill">
                             <div class="form-text">Formatos aceptados: .jpg, .png, .jpeg</div>
                         </div>
 

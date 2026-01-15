@@ -5,9 +5,10 @@ from datetime import timedelta
 from django.contrib.auth.models import Permission #NECESARIO PARA LOS PERMISOS AUTOMATICOS 
 from django.dispatch import receiver #PARA LOS PERMISOS AUTOMATICOS
 from django.db.models.signals import post_save #para los permisos automartico, se ejecuta despues de guardarse
-from django.contrib.auth.models import User, Group #para los usuarios  y grupos y permisos automaricos
+from django.contrib.auth.models import User, Group#para los usuarios  y grupos y permisos automaricos
 from datetime import datetime #para convertir string a fecha
 from simple_history.models import HistoricalRecords #PARA LOS LOGS
+
 # Create your models here.
 class Autor(models.Model): #parecido a django, 
 #aca ya no necesitamos eso del guion bajo name, description nada de eso
@@ -84,7 +85,7 @@ class Prestamo(models.Model):
     #calcular retraso
     @property
     def dias_retraso(self):
-     #el timezone now nos va a dar la fecha con zona horaria y todo, y el .date la fecha nomas
+    #el timezone now nos va a dar la fecha con zona horaria y todo, y el .date la fecha nomas
         #POR QUE USAMOS LOS 2?????????????????????????????????
         #pondra de fecha de referencia la fecha de devolucion o la de hoy, segun cual exista, si hay la devolucion
         #no usara la de hoy, si no hay usara hoy pq va en ordeen
@@ -185,3 +186,8 @@ class SolicitudPrestamo(models.Model):
 #TODO que se pueda rechazar las solicitudes sino quitar el boton
 #TODO se puede hacer que al iniciar sesion diga felcidades lala la y despues de unos segundos mande a home?
 #TODO revisar la seguridad con mas crsf tokens, me olvide de poner varios de esos
+#TODO accesos directos entre autores y libros
+#TODO detalle de libros, osea con descripcion y tal
+#TODO imagenes libros del open lib
+
+

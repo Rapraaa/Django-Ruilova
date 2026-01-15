@@ -65,11 +65,11 @@ def crear_libro(request): #hay que sacar los autores pq los necestiamos para que
 def lista_autores(request):
     autores = Autor.objects.all() #SELECT * FROM AUTORES #HAY QUE IMPORTAR EL AUTOR DEL MODELS PARA QUE LO RECONOZCA
     return render(request, 'gestion/templates/autores.html', {'autores' : autores} ) #explicar el render y quequest
- 
+
 @login_required #TODO CREAR AUTOR Y EDITAR AUTOR JUNTOS PARA LOS DEMAS COSOS
 @permission_required('gestion.Gestionar_autores', raise_exception=True,) 
 def crear_autor(request, id=None): #le pedimos el id pero puede ser none? #EXPLICAR #si el id no tiene valor sale con none
-     #aca pedimos el parametro request, ya que sin request no hay como saber si es post o no                
+    #aca pedimos el parametro request, ya que sin request no hay como saber si es post o no                
     #EXPLICAER QUE ES UN METODO POST
     if id == None: # si la id no existe
         autor = None #para que es esto?
@@ -97,39 +97,39 @@ def crear_autor(request, id=None): #le pedimos el id pero puede ser none? #EXPLI
         #redirecciona a lista autores para que lo liste, osea cada que crees un usuario te va a llevar alla
         #mandar los daatos del titulo o del boton
     context = {'autor':autor,
-               'titulo': 'Editar Autor' if modo == 'Editar' else 'Crear Autor',
-               'texto_boton': 'Guardar cambios' if modo == 'Editar' else 'Crear'} #acasdasd
+            'titulo': 'Editar Autor' if modo == 'Editar' else 'Crear Autor',
+            'texto_boton': 'Guardar cambios' if modo == 'Editar' else 'Crear'} #acasdasd
     return render(request, 'gestion/templates/crear_autor.html', context ) #les mandamos el contexto #REVISAR BIEN ESTO
     #como funciona eso??
     #  #si no es un metodo POST Y SOLO ESTA CARGANDO los datos se va al crear libros
     #los metodos SE VEN CON EL INSPECCIONAR ESE RARO EN NETWORK
 
 #def  editar_autor(request, id): #hay que mandar el autor en el return para poder visualizar los datos
- #   autor = get_object_or_404(Autor, id = id) #que siempre coincida con la id que nos manda la pagina
-  #  if request.method == 'POST':
-   #     nombre = request.POST.get('nombre')
+#   autor = get_object_or_404(Autor, id = id) #que siempre coincida con la id que nos manda la pagina
+#  if request.method == 'POST':
+#     nombre = request.POST.get('nombre')
     #    apellido = request.POST.get('apellido')   #ES UNO POR CADA UNO
-     #   bibliografia = request.POST.get('bibliografia')   
-      #  if nombre and apellido:
-       #     autor.nombre = nombre #EXPLICAR ESO
+    #   bibliografia = request.POST.get('bibliografia')   
+    #  if nombre and apellido:
+    #     autor.nombre = nombre #EXPLICAR ESO
         #    autor.apellido = apellido
-         #   autor.bibliografia = bibliografia
-          #  autor.save()  #EXPLICAR POR QUE LA A DEBE SER MINUSCULA
-       # return redirect('lista_autores')
-   # return render(request, 'gestion/templates/editar_autor.html', {'autor' : autor})
+        #   autor.bibliografia = bibliografia
+        #  autor.save()  #EXPLICAR POR QUE LA A DEBE SER MINUSCULA
+    # return redirect('lista_autores')
+# return render(request, 'gestion/templates/editar_autor.html', {'autor' : autor})
 @login_required 
 @permission_required('gestion.Ver_prestamos', raise_exception=True,) #hay que poner aparte del nombre del permiso de donde viene (gestion.)
 def lista_prestamos(request): #el pass  se ponia para que bo de error por mientras
     Prestamos = Prestamo.objects.all() #SELECT * FROM AUTORES #HAY QUE IMPORTAR EL AUTOR DEL MODELS PARA QUE LO RECONOZCA
     return render(request, 'gestion/templates/prestamos.html', {'prestamos' : Prestamos} ) #eEL DE LA izquierda, el de comillas es el que se llama en html
- #el de la derecha es la variable que creamos
+#el de la derecha es la variable que creamos
 
 
 @login_required 
 @permission_required('gestion.Gestionar_prestamos', raise_exception=True,) #SI NO PONEMOS raise_exepction true en vez de el error lo mandara al login 
 #debe estar iniciado sesion y con permisos                                                                               
 def crear_prestamo(request): 
-   # if not request.user.has.perm(gestion.Gestion_prestamos):
+# if not request.user.has.perm(gestion.Gestion_prestamos):
     #    return HttpResponseForbidden() #from django.http import HttpResponseForbidden
     #libros = Libro.objects.all #sacamos todos los datos del libro
     #enves de objects all podemos usar filter
@@ -138,7 +138,7 @@ def crear_prestamo(request):
     #EL METODO GET ES CUANDO BSUCAAS ALGO Y EL OBTIENES ALGO DE L SERVIDOR
     #EL METODO PSOT ES CUANDO LE DAS UNA INFORAMCION AL SERVIDOR PARA QUE ESE HAGA ALGO CON ELLA 
     if request.method == 'POST': #buscar como consigue request method el metodo
-                              #si es que el metodo es post
+                            #si es que el metodo es post
         libros_id = request.POST.get('libro')
         usuarios_id = request.POST.get('usuario')  #QUE PASA SI PONGO EL NOMBRE DE LA VARIABLE ACA EL MISMO DE ARRIBA DEL USER.OBJECTS.ALL
         fechas_prestamos = request.POST.get('fecha_prestamos')
@@ -161,8 +161,8 @@ def crear_prestamo(request):
     fecha = (timezone.now().date()).isoformat # explciar esto QUE QUE EUQ?? expolicar
     #YYYY MM DD
     return render(request, 'gestion/templates/crear_prestamo.html', {'libros': libros, 
-                  "usuarios" : usuarios,
-                  'fecha' : fecha})
+                "usuarios" : usuarios,
+                'fecha' : fecha})
 
 def detalle_prestamo(request): #para editar o ver detalle, no se, aun falta
     pass
@@ -347,7 +347,7 @@ def crear_libro(request):
                 #y la segunda es un booleano que avisa si lo tuvo que crear o ne
                 #les explico como usarla, todo lo que no sea defaults son los criterios de busqueda
                 #en idioma sql serian los where, busca que tenga ese nombre y apellido
-                #el defaults es lo que usara django si no encuentra, ya que va a crearlo el mismo pero necesita algo que 
+                #el defaults es lo que usara django si no encuentra, ya que va a crearlo el mismo pero cesita algo que 
                 #poner de bibliografia o no le dejara, ahi pondra eso
                 #usa 2 variables pq en la primera guarda el autor, osea loque acaba de encontrar o de crear
                 #en la segunda te avisa si lo encontro o creo
@@ -402,7 +402,7 @@ def devolver_libro(request, prestamo_id):
     prestamo.fecha_devolucion = timezone.now().date()
     prestamo.save()
 
-  #liberamos libro
+#liberamos libro
     libro = prestamo.libro
     libro.disponible = True
     libro.save()
@@ -461,7 +461,7 @@ def solicitar_prestamo(request):
     fecha = (timezone.now().date()).isoformat # explciar esto QUE QUE EUQ?? expolicar
     #YYYY MM DD
     return render(request, 'gestion/templates/solicitar_prestamo.html', {'libros': libros,
-                  'fecha' : fecha})   
+                'fecha' : fecha})   
 
 @login_required 
 @permission_required('gestion.Ver_solicitudes_prestamos', raise_exception=True,)
@@ -566,3 +566,14 @@ def auditoria_global(request):
     historial_ordenado = sorted(lista_total, key=attrgetter('history_date'), reverse=True)
 
     return render(request, 'auditoria_global.html', {'historial': historial_ordenado})
+
+#todo examen
+#TODO que el usuario pueda ver sus propios prestamos o multas o solicitudes
+#TODO agregar acciones al libros, editar
+#TOD arreglar la fecha de solicitud HECHO--
+#TODO revisar la logica de multas para todos los casos, digamos aparte de la plata y eso que no se puede hacer retraso y perdida al mismo tiempo
+#TODO las paginas
+#TODO que si se crea el libro con el open lib y autocompleta el autor NO lo pueda cambiar por otro
+#TODO no dejar cambiar la fecha en solicitud prestamo
+#TODO arreglar logica de multas, perdidas, da;os
+#todo devolver libros o dinero al perder

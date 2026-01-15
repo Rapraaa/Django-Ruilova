@@ -1,0 +1,143 @@
+{
+  "stats": {
+    "suites": 1,
+    "tests": 3,
+    "passes": 3,
+    "pending": 0,
+    "failures": 0,
+    "start": "2026-01-14T21:51:33.606Z",
+    "end": "2026-01-14T21:52:10.420Z",
+    "duration": 36814,
+    "testsRegistered": 3,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "f9561f52-a23e-40f8-9b3a-2e69eac0ae15",
+      "title": "",
+      "fullFile": "cypress/e2e/login.cy.js",
+      "file": "cypress/e2e/login.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "bd5a6b3b-a95a-416d-a2e2-6428a587ff18",
+          "title": "Modulo de autenticacion",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "login fallido",
+              "fullTitle": "Modulo de autenticacion login fallido",
+              "timedOut": null,
+              "duration": 11019,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "//Deberia mostrar un inicio de sesion fallido\ncy.visit(\"localhost:8000\");\ncy.wait(5000);\ncy.contains(\"Ingresar\").click();\ncy.wait(1500);\ncy.get(\"input#id_username\").type(\"pepitoelmascapito\");\ncy.get(\"input#id_password\").type(123456);\ncy.wait(1500);\ncy.contains(\"Entrar\").click();\ncy.contains(\"Error: Usuario o contraseña incorrectos.\");",
+              "err": {},
+              "uuid": "67dbd68f-eaf6-4102-89dd-6f06fb97fedf",
+              "parentUUID": "bd5a6b3b-a95a-416d-a2e2-6428a587ff18",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "no debería permitir el registro si la confirmación de contraseña es incorrecta",
+              "fullTitle": "Modulo de autenticacion no debería permitir el registro si la confirmación de contraseña es incorrecta",
+              "timedOut": null,
+              "duration": 9534,
+              "state": "passed",
+              "speed": "medium",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "//Fallo en la confirmacion de contrasella\ncy.visit(\"localhost:8000\");\ncy.wait(5000);\ncy.contains(\"Registrarse\").click();\ncy.wait(1500);\ncy.get(\"input#id_username\").type(\"Prueba1\");\ncy.get(\"input#id_password1\").type(\"123456hola\");\ncy.get(\"input#id_password2\").type(\"123456hola1\");\ncy.get(\"button.btn.btn-custom.btn-lg.shadow\").click();\ncy.wait(1500);\ncy.contains(\"The two password fields didn’t match.\");",
+              "err": {},
+              "uuid": "51a496ba-8134-47a1-b723-aad02b698c5b",
+              "parentUUID": "bd5a6b3b-a95a-416d-a2e2-6428a587ff18",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "registro exitoso y login de usuario'",
+              "fullTitle": "Modulo de autenticacion registro exitoso y login de usuario'",
+              "timedOut": null,
+              "duration": 14904,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "//Reggistra un usuario valido, para evitar repetir usamos timestamps\n//tambien se puede borrar el usuario previamente o usar una\n//base de datos de prueba\n//const declara variables permanentes, osea que no varian xd\nconst ID_unico = Date.now(); //devuelme los milisegundos que han pasado\n//desde del 1 de enero de 1970, a saber pq xd\ncy.visit(\"localhost:8000\");\ncy.wait(5000);\ncy.contains(\"Registrarse\").click();\ncy.wait(1500);\ncy.get(\"input#id_username\").type(`usuario_${ID_unico}`); //es como un fstring\n//SE DEBE USAR COMILLA INVERTIDA\ncy.get(\"input#id_password1\").type(\"123456hola\");\ncy.get(\"input#id_password2\").type(\"123456hola\");\ncy.get(\"button.btn.btn-custom.btn-lg.shadow\").click();\ncy.wait(1500);\ncy.contains(`usuario_${ID_unico}`);\ncy.contains(\"Salir\").click();\ncy.wait(1500);\ncy.get(\"input#id_username\").type(`usuario_${ID_unico}`);\ncy.get(\"input#id_password\").type(\"123456hola\");\ncy.contains(\"Entrar\").click();\ncy.wait(1500);\ncy.contains(`usuario_${ID_unico}`);",
+              "err": {},
+              "uuid": "fac7dbf4-f258-4544-b6f6-ed8759c391e4",
+              "parentUUID": "bd5a6b3b-a95a-416d-a2e2-6428a587ff18",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "67dbd68f-eaf6-4102-89dd-6f06fb97fedf",
+            "51a496ba-8134-47a1-b723-aad02b698c5b",
+            "fac7dbf4-f258-4544-b6f6-ed8759c391e4"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 35457,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.4"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/reports",
+        "overwrite": false,
+        "html": true,
+        "json": true
+      },
+      "version": "6.3.2"
+    }
+  }
+}

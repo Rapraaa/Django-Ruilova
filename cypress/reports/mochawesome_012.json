@@ -1,0 +1,239 @@
+{
+  "stats": {
+    "suites": 3,
+    "tests": 6,
+    "passes": 6,
+    "pending": 0,
+    "failures": 0,
+    "start": "2026-01-15T02:35:04.457Z",
+    "end": "2026-01-15T02:35:35.703Z",
+    "duration": 31246,
+    "testsRegistered": 6,
+    "passPercent": 100,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "5fd19d9f-1808-4bad-9a6b-135642cb66da",
+      "title": "",
+      "fullFile": "cypress/e2e/login.cy.js",
+      "file": "cypress/e2e/login.cy.js",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "572bf23e-d4e9-4aea-871c-00b31721183b",
+          "title": "Modulo de autenticacion",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "login fallido",
+              "fullTitle": "Modulo de autenticacion login fallido",
+              "timedOut": null,
+              "duration": 14884,
+              "state": "passed",
+              "speed": "slow",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "//Deberia mostrar un inicio de sesion fallido\ncy.wait(1000);\ncy.contains(\"Ingresar\").click();\ncy.wait(1000);\ncy.get(\"input#id_username\").type(\"pepitoelmascapito\");\ncy.get(\"input#id_password\").type(123456);\ncy.wait(1000);\ncy.contains(\"Entrar\").click();\ncy.contains(\"Error: Usuario o contraseña incorrectos.\");",
+              "err": {},
+              "uuid": "55061281-1d42-47dc-8d3a-120709a78167",
+              "parentUUID": "572bf23e-d4e9-4aea-871c-00b31721183b",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "no debería permitir el registro si la confirmación de contraseña es incorrecta",
+              "fullTitle": "Modulo de autenticacion no debería permitir el registro si la confirmación de contraseña es incorrecta",
+              "timedOut": null,
+              "duration": 4496,
+              "state": "passed",
+              "speed": "fast",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "//Fallo en la confirmacion de contrasella\ncy.wait(1000);\ncy.contains(\"Registrarse\").click();\ncy.wait(1000);\ncy.get(\"input#id_username\").type(\"Prueba1\");\ncy.get(\"input#id_password1\").type(\"123456hola\");\ncy.get(\"input#id_password2\").type(\"123456hola1\");\ncy.get(\"button.btn.btn-custom.btn-lg.shadow\").click();\ncy.wait(1500);\ncy.contains(\"The two password fields didn’t match.\");",
+              "err": {},
+              "uuid": "3e77bc01-0151-4602-9733-08a224003245",
+              "parentUUID": "572bf23e-d4e9-4aea-871c-00b31721183b",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "registro exitoso y login de usuario",
+              "fullTitle": "Modulo de autenticacion registro exitoso y login de usuario",
+              "timedOut": null,
+              "duration": 7813,
+              "state": "passed",
+              "speed": "medium",
+              "pass": true,
+              "fail": false,
+              "pending": false,
+              "context": null,
+              "code": "//Reggistra un usuario valido, para evitar repetir usamos timestamps\n//tambien se puede borrar el usuario previamente o usar una\n//base de datos de prueba\n//const declara variables permanentes, osea que no varian xd\nconst ID_unico = Date.now(); //devuelme los milisegundos que han pasado\n//desde del 1 de enero de 1970, a saber pq xd\ncy.wait(1000);\ncy.contains(\"Registrarse\").click();\ncy.wait(1000);\ncy.get(\"input#id_username\").type(`usuario_${ID_unico}`); //es como un fstring\n//SE DEBE USAR COMILLA INVERTIDA\ncy.get(\"input#id_password1\").type(\"123456hola\");\ncy.get(\"input#id_password2\").type(\"123456hola\");\ncy.get(\"button.btn.btn-custom.btn-lg.shadow\").click();\ncy.wait(1000);\ncy.contains(`usuario_${ID_unico}`);\ncy.contains(\"Salir\").click();\ncy.wait(1500);\ncy.get(\"input#id_username\").type(`usuario_${ID_unico}`);\ncy.get(\"input#id_password\").type(\"123456hola\");\ncy.contains(\"Entrar\").click();\ncy.wait(1000);\ncy.contains(`usuario_${ID_unico}`);",
+              "err": {},
+              "uuid": "bb97835d-2986-49a8-8c40-ae8666049fbe",
+              "parentUUID": "572bf23e-d4e9-4aea-871c-00b31721183b",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [
+            "55061281-1d42-47dc-8d3a-120709a78167",
+            "3e77bc01-0151-4602-9733-08a224003245",
+            "bb97835d-2986-49a8-8c40-ae8666049fbe"
+          ],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 27193,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        },
+        {
+          "uuid": "a075f381-5f1d-4949-be8c-ba05f0ec27bb",
+          "title": "modulo de permisos",
+          "fullFile": "",
+          "file": "",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [],
+          "suites": [
+            {
+              "uuid": "bd259e74-2aae-4c94-ab49-a8388581b721",
+              "title": "Usuario no autenticado",
+              "fullFile": "",
+              "file": "",
+              "beforeHooks": [],
+              "afterHooks": [],
+              "tests": [
+                {
+                  "title": "debería redirigir al login cuando un usuario anónimo intenta crear un préstamo",
+                  "fullTitle": "modulo de permisos Usuario no autenticado debería redirigir al login cuando un usuario anónimo intenta crear un préstamo",
+                  "timedOut": null,
+                  "duration": 1911,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "cy.wait(1000);\ncy.contains(\"Solicitar\").click();\ncy.wait(500);\ncy.url().should(\"include\", \"/login\");\ncy.visit(\"/\");\ncy.get(\":nth-child(4) > .nav-link\").click();\ncy.url().should(\"include\", \"/login\");",
+                  "err": {},
+                  "uuid": "d27746cf-7057-45f5-8017-f7a0f213ff11",
+                  "parentUUID": "bd259e74-2aae-4c94-ab49-a8388581b721",
+                  "isHook": false,
+                  "skipped": false
+                },
+                {
+                  "title": "debería redirigir a la pagina de los libros al hacer click en ver libros, en la pagina principal y la barra de arriba",
+                  "fullTitle": "modulo de permisos Usuario no autenticado debería redirigir a la pagina de los libros al hacer click en ver libros, en la pagina principal y la barra de arriba",
+                  "timedOut": null,
+                  "duration": 1801,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "cy.wait(1000);\ncy.get(\":nth-child(1) > .dashboard-card > .btn\").click();\ncy.wait(500);\ncy.url().should(\"include\", \"/libros\");\ncy.visit(\"/\");\ncy.get(\":nth-child(2) > .nav-link\").click();\ncy.url().should(\"include\", \"/libros\");",
+                  "err": {},
+                  "uuid": "236e0437-5964-44bd-b174-f88bb4f19cb1",
+                  "parentUUID": "bd259e74-2aae-4c94-ab49-a8388581b721",
+                  "isHook": false,
+                  "skipped": false
+                },
+                {
+                  "title": "no deberia poder acceder a crear libros, debe pedir autentificacion",
+                  "fullTitle": "modulo de permisos Usuario no autenticado no deberia poder acceder a crear libros, debe pedir autentificacion",
+                  "timedOut": null,
+                  "duration": 224,
+                  "state": "passed",
+                  "speed": "fast",
+                  "pass": true,
+                  "fail": false,
+                  "pending": false,
+                  "context": null,
+                  "code": "cy.visit(\"/libros/nuevo\");\ncy.url().should(\"include\", \"/login\");",
+                  "err": {},
+                  "uuid": "3a868e34-cda5-4563-b6e4-69db589befb5",
+                  "parentUUID": "bd259e74-2aae-4c94-ab49-a8388581b721",
+                  "isHook": false,
+                  "skipped": false
+                }
+              ],
+              "suites": [],
+              "passes": [
+                "d27746cf-7057-45f5-8017-f7a0f213ff11",
+                "236e0437-5964-44bd-b174-f88bb4f19cb1",
+                "3a868e34-cda5-4563-b6e4-69db589befb5"
+              ],
+              "failures": [],
+              "pending": [],
+              "skipped": [],
+              "duration": 3936,
+              "root": false,
+              "rootEmpty": false,
+              "_timeout": 2000
+            }
+          ],
+          "passes": [],
+          "failures": [],
+          "pending": [],
+          "skipped": [],
+          "duration": 0,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 2000
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 2000
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "7.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.4"
+    },
+    "marge": {
+      "options": {
+        "reportDir": "cypress/reports",
+        "overwrite": false,
+        "html": true,
+        "json": true
+      },
+      "version": "6.3.2"
+    }
+  }
+}

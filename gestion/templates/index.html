@@ -132,7 +132,7 @@
                         <a class="nav-link" href="{% url 'solicitar_prestamo'%}">Solicitar préstamo</a>
                     {% endif %}
                     </li>
-                    {% if perms.gestion.Ver_solicitudes_prestamos %}
+                    {% if perms.gestion.Ver_solicitudes_prestamos or not request.user.is_authenticated %}
                         <li class="nav-item"><a class="nav-link" href="{% url 'lista_solicitudes_prestamo' %}">Solicitudes</a></li>
                     {% endif %}
                     {% if perms.gestion.Ver_multas %}

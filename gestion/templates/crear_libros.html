@@ -20,7 +20,7 @@
                         </label>
                         <div class="input-group">
                             <input type="text" name="busqueda" class="form-control" 
-                                   placeholder="ISBN o Título (Ej: El Principito)">
+                                placeholder="ISBN o Título (Ej: El Principito)">
                             <button class="btn btn-secondary" type="submit">
                                 <i class="fas fa-search"></i> Buscar
                             </button>
@@ -41,9 +41,9 @@
                             </label>
                             
                             <input type="text" id="id_titulo" name="titulo" 
-                                   class="form-control rounded-pill" 
-                                   placeholder="Ej. El Principito" 
-                                   value="{{ datos_iniciales.titulo|default:'' }}" required>
+                                class="form-control rounded-pill" 
+                                placeholder="Ej. El Principito" 
+                                value="{{ datos_iniciales.titulo|default:'' }}" required>
                         </div>
 
                         <div class="mb-4">
@@ -54,6 +54,7 @@
                                 <option value="" disabled {% if not datos_iniciales.autor_id %}selected{% endif %}>
                                     -- Seleccione un autor --
                                 </option>
+
                                 
                                 {% for autor in autores %}
                                     <option value="{{ autor.id }}" 

@@ -46,7 +46,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'gestion',
     'django_extensions', #este es para unas extensiones utiles, lo use para refrescar un permiso que no se cambiaba correctamente
-    'simple_history' #los logs
+    'simple_history', #los logs
+    'rest_framework', #necesario apra las apis
+    'django_filters' #ayuda con los filtros (opcional)
 ]
 
 MIDDLEWARE = [
@@ -136,3 +138,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static') #EXPLICAR ESTE CACHITO DE CODIGO 
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10 #para la paginacion
+    }
