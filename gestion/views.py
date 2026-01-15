@@ -577,3 +577,4 @@ def auditoria_global(request):
 #TODO no dejar cambiar la fecha en solicitud prestamo
 #TODO arreglar logica de multas, perdidas, da;os
 #todo devolver libros o dinero al perder
+###
